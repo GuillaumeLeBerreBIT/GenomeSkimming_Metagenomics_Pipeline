@@ -1,0 +1,116 @@
+############################## INFORMATION ##############################
+# When starting either Genome Skimmong workflows or Metagenomics workflows
+# Can select the workflow by defining the 'pipeline' variable
+# 
+# COMMANDS
+# BAR: 
+# snakemake --use-conda --use-singularity --singularity-args "-B /home/genomics/gleberre/01_Research_BAR_ZAND/01_BAR/01_BAR_GS:/home/genomics/gleberre/01_Research_BAR_ZAND/03_Pipeline_development/mnt" --cores 24
+# ZAND: 
+# snakemake --use-conda --use-singularity --singularity-args "-B /home/genomics/gleberre/01_Research_BAR_ZAND/02_ZAND/01_ZAND_GS:/home/genomics/gleberre/01_Research_BAR_ZAND/03_Pipeline_development/mnt" --cores 24
+
+pipeline: "Genome_Skimming" 
+# Genome_Skimming
+# Metagenomics
+
+genome_skimming:
+  sample: 'MB_GS_O_fusiformis_S38'
+  
+  seqdata: "00_ZAND_RAW_SEQ/01_SEQ_GS"
+  # BAR_GS: "00_BAR_RAW_SEQ/01_SEQ_GS"
+  # ZAND_GS: "00_ZAND_RAW_SEQ/01_SEQ_GS"
+
+  project: "01_ZAND_GS"
+  # BAR_GS: "01_BAR_GS"
+  # ZAND_GS: "01_ZAND_GS"
+  
+  datadir: "/home/genomics/gleberre/01_Research_BAR_ZAND/02_ZAND/" 
+  # BAR: "/home/genomics/gleberre/01_Research_BAR_ZAND/01_BAR/" 
+  # ZAND: "/home/genomics/gleberre/01_Research_BAR_ZAND/02_ZAND/"
+
+  dockerdir: "/home/genomics/gleberre/01_Research_BAR_ZAND/03_Pipeline_development/mnt"
+  # The direcotory used when docker/singularity is initialized 
+
+  workflow: "AllAssemblies" 
+  # Assembly: To perform the Assemblies of mtDNA, rDNA and Nuclear DNA. 
+  # AssemblyFree: Perfrom the k-mer matching of the Genome Skim reads using KRAKEN2
+  # KrakenBuildDB: Build a custom KRAKEN2 database from all gathered reads after Aseembly Free
+  # AssemblyFree_KrakenBuild: The complete pipeline to perfrom k-mer matching of the reads, followed by the creation of a custom database. 
+  # AllAssemblies: Perfrom the Assembly methods for mtDNA, rDNA and Nuclear DNA togheter with the k-mer matching og the GenomeSkim reads.
+  # AllAssemblies_KrakenBuild: Perfrom the Assembly methods for mtDNA, rDNA and Nuclear DNA togheter with the k-mer matching og the GenomeSkim reads. Finalized with the creation of the GenomeSkim database with KRAKEN2. 
+  
+  species: "Owenia_fusiformis"
+
+  taxid: "36121" 
+  # Need to add the Taxonomic ID when performing Assembly Free Analysis
+  # Pplatessa: 8262
+  # Sscombrus: 13677
+  # Charengus: 7950
+  # Abra alba: 399303
+  # Macoma balthica: 1903275
+  # Nepthys cirrosa: 714606
+  # Fabulina fabula: 2589387
+  # Glycera alba: 221998
+  # Magelona johnstoni: 1436028
+  # Nephtys caeca: 714603
+  # Ophuria ophuria: 72673
+  # Nephtys hombergii: 36121
+  # Owenia fusiformis: 6347
+
+  KrakenDB: "GenomeSkimDB"
+  # Name of the KRAKEN2 Database 
+
+# For the Annotation by MITOS. >> NCBI codon table
+mitos:
+  database: "/home/genomics/gleberre/01_Research_BAR_ZAND/03_Pipeline_development"
+  # 5 == Invertebrate, 2 == Vertebrate, 4 == Mold, 14 Alternative flatworm, 9 == Echinoderm, 13 == Ascidian
+  gencode: 5
+
+
+# Only need to full in performing: Assembly, AllAssemblies, AllAssemblies_KrakenBuild
+genbank:
+  ## HEADER
+  locus: "Owenia_fusiformis_mtDNA"
+  bioproject: "Mitochondrial_Assembly"
+  sample_type: "ILVO - RMG"
+  taxonomy: "Owenia_fusiformis"
+  organism_header: "Owenia fusiformis"
+  mol_type: "DNA"
+  topology: "circular"
+  # Could be circular or linear 
+
+  ## FEATURE TABLE
+  # SOURCE
+  organism: "Owenia fusiformis"
+  organelle: "mitochondrion"
+
+## METAGENOMICS
+metagenomics:
+  
+  sample: 'BAR_MG_P_platessa_S23'
+  
+  workflow: "Gamma_Delta"
+  # Kmer_Matching: To perform k-mer matching of the reads against a "Custom" created database
+  # Gamma_Delta: 
+  
+  seqdata: "00_BAR_RAW_SEQ/02_SEQ_MG"
+  # BAR_MG: "00_BAR_RAW_SEQ/02_SEQ_MG"
+  # ZAND_MG: "00_ZAND_RAW_SEQ/02_SEQ_MG"
+
+  project: "02_BAR_MG"
+  # BAR_MG: "02_BAR_MG"
+  # ZAND_MG: "02_ZAND_MG"
+  
+  datadir: "/home/genomics/gleberre/01_Research_BAR_ZAND/01_BAR/" 
+  # BAR: "/home/genomics/gleberre/01_Research_BAR_ZAND/01_BAR/" 
+  # ZAND: "/home/genomics/gleberre/01_Research_BAR_ZAND/02_ZAND/"
+
+  dockerdir: "/home/genomics/gleberre/01_Research_BAR_ZAND/03_Pipeline_development/mnt"
+  # The directory used when docker/singularity is initialized 
+
+  KrakenStand: "/home/genomics/gleberre/01_Research_BAR_ZAND/03_Pipeline_development/databases"
+
+  KrakenCustomDB: "/home/genomics/gleberre/01_Research_BAR_ZAND/01_BAR/01_BAR_GS/15_Kraken_Databases/GenomeSkimDB"
+
+  FolderReferenceFasta: "/home/genomics/gleberre/01_Research_BAR_ZAND/01_BAR/01_BAR_GS/17_Reference_Mapping_MG"
+  # BAR: "/home/genomics/gleberre/01_Research_BAR_ZAND/01_BAR/01_BAR_GS/17_Reference_Mapping_MG" 
+  # ZAND: "/home/genomics/gleberre/01_Research_BAR_ZAND/02_ZAND/01_BAR_GS/17_Reference_Mapping_MG"
