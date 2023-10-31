@@ -40,3 +40,5 @@ rule SamtoolsView:
         done
         touch {output}
         """
+        # Firstly ${sam##*/} will remove the file name from the path. 
+        # {samfile%%.*} will split the name from the file extension

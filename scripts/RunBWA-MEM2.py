@@ -53,4 +53,4 @@ for file in os.listdir(args.ReferenceFastaFolder):
     # Firstly do index the Reference fasta
     subprocess.run(f"bwa-mem2 index -p {file_index} {file_path}", shell = True)
     # If the indexing is done start the alignment of the file. 
-    subprocess.run(f"bwa-mem2 mem {file_index} {args.PE_1} {args.PE_2} -o {args.MappingOutput}/{args.sample}_{file_splitted[0]}.sam", shell = True)
+    subprocess.run(f"bwa-mem2 mem -t 8 {file_index} {args.PE_1} {args.PE_2} -o {args.MappingOutput}/{args.sample}_{file_splitted[0]}.sam", shell = True)

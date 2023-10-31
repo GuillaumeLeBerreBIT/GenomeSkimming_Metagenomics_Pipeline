@@ -151,10 +151,11 @@ if config["pipeline"] == "Genome_Skimming":
                     TAXID = config['genome_skimming']['taxid'],
                     species = config["genome_skimming"]["species"]
                 )
-
+                
+## METAGENOMICS
 elif config["pipeline"] == "Metagenomics":
 
-    ## METAGENOMICS
+    
     if config["metagenomics"]["workflow"] == "Kmer_Matching":
         include:
             "workflows/Kmer_matching_workflow.smk"
@@ -173,7 +174,7 @@ elif config["pipeline"] == "Metagenomics":
                     sample = config["metagenomics"]["sample"]                
                 )
     
-    ## METAGENOMICS
+    
     elif config["metagenomics"]["workflow"] == "Gamma_Delta":
         include:
             "workflows/Gamma-Delta_workflow.smk"
@@ -185,7 +186,7 @@ elif config["pipeline"] == "Metagenomics":
                         os.path.join(DATA_DIR_MG, "{project}/02_FastQC_Results/{sample}_R1_Unpaired_fastqc.html"),
                         os.path.join(DATA_DIR_MG, "{project}/02_FastQC_Results/{sample}_R2_Paired_fastqc.html"),
                         os.path.join(DATA_DIR_MG, "{project}/02_FastQC_Results/{sample}_R2_Unpaired_fastqc.html"),
-                        os.path.join(DATA_DIR_MG, "{project}/08_Sam_Filtered/{sample}_Samtools_view.done")
+                        os.path.join(DATA_DIR_MG, "{project}/09_Gamma_Delta_Results/{sample}_Gamma_Delta.csv")
                         
                     ],
                     project = config["metagenomics"]["project"],
