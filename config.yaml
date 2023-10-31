@@ -8,12 +8,12 @@
 # ZAND: 
 # snakemake --use-conda --use-singularity --singularity-args "-B /home/genomics/gleberre/01_Research_BAR_ZAND/02_ZAND/01_ZAND_GS:/home/genomics/gleberre/01_Research_BAR_ZAND/03_Pipeline_development/mnt" --cores 24
 
-pipeline: "Genome_Skimming" 
+pipeline: "Metagenomics" 
 # Genome_Skimming
 # Metagenomics
 
 genome_skimming:
-  sample: 'MB_GS_O_fusiformis_S38'
+  sample: 'MB_GS_E_sanguinea_S39'
   
   seqdata: "00_ZAND_RAW_SEQ/01_SEQ_GS"
   # BAR_GS: "00_BAR_RAW_SEQ/01_SEQ_GS"
@@ -38,9 +38,9 @@ genome_skimming:
   # AllAssemblies: Perfrom the Assembly methods for mtDNA, rDNA and Nuclear DNA togheter with the k-mer matching og the GenomeSkim reads.
   # AllAssemblies_KrakenBuild: Perfrom the Assembly methods for mtDNA, rDNA and Nuclear DNA togheter with the k-mer matching og the GenomeSkim reads. Finalized with the creation of the GenomeSkim database with KRAKEN2. 
   
-  species: "Owenia_fusiformis"
+  species: "Eumida_sanguinea"
 
-  taxid: "36121" 
+  taxid: "329452" 
   # Need to add the Taxonomic ID when performing Assembly Free Analysis
   # Pplatessa: 8262
   # Sscombrus: 13677
@@ -55,6 +55,7 @@ genome_skimming:
   # Ophuria ophuria: 72673
   # Nephtys hombergii: 36121
   # Owenia fusiformis: 6347
+  # Eumida sanguinea: 329452
 
   KrakenDB: "GenomeSkimDB"
   # Name of the KRAKEN2 Database 
@@ -69,18 +70,18 @@ mitos:
 # Only need to full in performing: Assembly, AllAssemblies, AllAssemblies_KrakenBuild
 genbank:
   ## HEADER
-  locus: "Owenia_fusiformis_mtDNA"
+  locus: "Eumida_sanguinea_mtDNA"
   bioproject: "Mitochondrial_Assembly"
   sample_type: "ILVO - RMG"
-  taxonomy: "Owenia_fusiformis"
-  organism_header: "Owenia fusiformis"
+  taxonomy: "Eumida_sanguinea"
+  organism_header: "Eumida sanguinea"
   mol_type: "DNA"
   topology: "circular"
   # Could be circular or linear 
 
   ## FEATURE TABLE
   # SOURCE
-  organism: "Owenia fusiformis"
+  organism: "Eumida sanguinea"
   organelle: "mitochondrion"
 
 ## METAGENOMICS

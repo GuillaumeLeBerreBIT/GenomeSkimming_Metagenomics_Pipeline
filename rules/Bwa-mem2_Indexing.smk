@@ -1,4 +1,14 @@
+#!/usr/bin/python3
+############################# INTRODUCTION #############################
+# 
+# 
+#
+###################################################################
+# 
+############################# MODULES #############################
 import os, glob
+
+############################# RULES #############################
 
 
 rule BWA_Index:
@@ -34,20 +44,12 @@ rule BWA_Index:
             project = config["metagenomics"]["project"]
             ),
         Sample = config["metagenomics"]["sample"],
-        IndexOutput = "/home/genomics/gleberre/01_Research_BAR_ZAND/01_BAR/02_BAR_MG/06_Mapped_Indexes/"
+        OutputMappings = expand(os.path.join(DATA_DIR_MG, "{project}/07_BWA_Mapped_Sequences/{sample}/"),
+            project = config["metagenomics"]["project"], sample = config["metagenomics"]["sample"]
+            )
     
-
     shell:
         """
-        python3 scripts/RunBWA-MEM2.py -f {params.FolderReferenceFasta} -1 {input.PAIRED_1} -2 {input.PAIRED_2} -s {params.Sample} -io {params.IndexOutput}
+        python3 scripts/RunBWA-MEM2.py -f {params.FolderReferenceFasta} -1 {input.PAIRED_1} -2 {input.PAIRED_2} -s {params.Sample} -io {params.OutputFolderIndexes} -mo {params.OutputMappings}
         touch {output}
         """
-
-#    for file in "{params.FolderReferenceFasta}/*"
-#        do
-#            echo $file
-#            filename=$(basename "$file" | cut -d. -f1)
-#            bwa-mem2 index -p "{params.OutputFolderIndexes}/$filename" $file
-#            bwa-mem2 mem "{params.OutputFolderIndexes}/$filename" "{input.PAIRED_1}" "{input.PAIRED_2}" -o {params.Sample}_"$filename".sam
-#        done
-#    touch "{output}"

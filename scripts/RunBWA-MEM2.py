@@ -13,12 +13,14 @@ parser.add_argument('-s', '--sample', type = str, required = True,
                     help ='Name of the sample')
 parser.add_argument('-io', '--IndexOutput', type = str, required = True, 
                     help ='Name of the sample')
+parser.add_argument('-mo', '--MappingOutput', type = str, required = True, 
+                    help ='Name of the sample')
 args = parser.parse_args()
 
 # If the folder to store the Mapped Indexes is present will skip
 if os.path.exists(args.IndexOutput):
     pass
-#If the folder is not present it will >>
+# If the folder is not present it will >>
 else:
     # Split up the full path of the folder
     splitted_path = args.IndexOutput.split('/')
@@ -51,4 +53,4 @@ for file in os.listdir(args.ReferenceFastaFolder):
     # Firstly do index the Reference fasta
     subprocess.run(f"bwa-mem2 index -p {file_index} {file_path}", shell = True)
     # If the indexing is done start the alignment of the file. 
-    subprocess.run(f"bwa-mem2 mem {file_index} {args.PE_1} {args.PE_2} -o /home/genomics/gleberre/01_Research_BAR_ZAND/01_BAR/02_BAR_MG/07_BWA_Mapped_Sequences/{args.sample}_{file_splitted[0]}.sam", shell = True)
+    subprocess.run(f"bwa-mem2 mem {file_index} {args.PE_1} {args.PE_2} -o {args.MappingOutput}/{args.sample}_{file_splitted[0]}.sam", shell = True)
