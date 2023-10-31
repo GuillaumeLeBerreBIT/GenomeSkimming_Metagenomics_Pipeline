@@ -19,8 +19,12 @@ rule ContaminationFiltering:
             project = config["genome_skimming"]["project"], sample = config["genome_skimming"]["sample"]
             )
     output:
-        expand(
+        OutputReads = expand(
             os.path.join(DATA_DIR_GS, "{project}/12_Contaminant_Kraken2/{sample}/ClassifiedContamination.kraken"),
+            project = config["genome_skimming"]["project"], sample = config["genome_skimming"]["sample"]
+            ),
+        UnclassifiedReads = expand(
+            os.path.join(DATA_DIR_GS, "{project}/13_Extract_Kraken2_Reads/{sample}/{sample}_Unclassified.fasta"),
             project = config["genome_skimming"]["project"], sample = config["genome_skimming"]["sample"]
             )
 
@@ -36,5 +40,5 @@ rule ContaminationFiltering:
 
     shell:
         """
-        kraken2 --use-names --threads 8 --db {params.dbk2} --report {params.smp_report} {input} > {output}
+        kraken2 --use-names --threads 8 --db {params.dbk2} --report {params.smp_report} --unclassified-out {output.UnclassifiedReads} {input} > {output.OutputReads}
         """
