@@ -1,4 +1,4 @@
-############################# INTRODUCTION #############################
+############################# SNAKEFILE #############################
 # 
 # The main Snakefile functions as possibility to choose the different Workflows for the analysis high throughput sequencing reads. 
 # The Assembly method is to assemble a mitochondrial reference genome and ribosomal repeats of high-throughput sequencing data.  
@@ -205,6 +205,7 @@ elif config["pipeline"] == "Metagenomics":
                     PROJECT = config["genome_skimming"]["project"],
                     SAMPLE = config["genome_skimming"]["sample"]                
                 )
+
     # This performs the k-mer matching of reads against a custom created KRAKEN Genome Skimming database. Combined with 
     # the mapping of reads against a self-created custom reference mitochondrial genome and ribosomal repeat
     elif config["metagenomics"]["workflow"] == "Gamma_Delta_Kmer":

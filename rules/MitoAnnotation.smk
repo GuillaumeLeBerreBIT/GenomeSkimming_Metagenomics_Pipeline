@@ -1,5 +1,5 @@
-# #!/usr/bin/python3
-############################# INTRODUCTION #############################
+#!/usr/bin/python3
+############################# RULE #############################
 # 
 # This is to perform the annotation of mitochondrial genome by MITOS. 
 # Here MITOS is pulled from a doker container to perform the analysis. 
@@ -7,7 +7,7 @@
 ###################################################################
 # 
 ############################# MODULES #############################
-import os, glob
+import os
 
 ############################# RULES #############################
 # The mitochondrial annotation doen by MITOS
@@ -19,13 +19,13 @@ import os, glob
 
 rule MitosMito:
     input:
-        expand(os.path.join(DATA_DIR_GS, "{project}/04_GetOrganelle_Mito_Results/{sample}/get_org.log.txt"),
-            project = config["genome_skimming"]["project"], sample = config["genome_skimming"]["sample"]
+        expand(os.path.join(DATA_DIR_GS, "{PROJECT}/04_GetOrganelle_Mito_Results/{SAMPLE}/get_org.log.txt"),
+            PROJECT = config["genome_skimming"]["project"], SAMPLE = config["genome_skimming"]["sample"]
             )
     output:
     # Use a dummy file as target output to avoid the complications of variable output
-        expand(os.path.join(DATA_DIR_GS, "{project}/06_MITOS_Results/{sample}/AnnotationMitosDone.txt"),
-            project = config["genome_skimming"]["project"], sample = config["genome_skimming"]["sample"]
+        expand(os.path.join(DATA_DIR_GS, "{PROJECT}/06_MITOS_Results/{SAMPLE}/AnnotationMitosDone.txt"),
+            PROJECT = config["genome_skimming"]["project"], SAMPLE = config["genome_skimming"]["sample"]
             )
 
     #conda:
@@ -35,8 +35,8 @@ rule MitosMito:
 
     params:
         # Define folders under params and not as output otherwise will not work. 
-        MitosFolder = expand(os.path.join(DATA_DIR_GS, "{project}/06_MITOS_Results/{sample}/"),
-            project = config["genome_skimming"]["project"], sample = config["genome_skimming"]["sample"]
+        MitosFolder = expand(os.path.join(DATA_DIR_GS, "{PROJECT}/06_MITOS_Results/{SAMPLE}/"),
+            PROJECT = config["genome_skimming"]["project"], SAMPLE = config["genome_skimming"]["sample"]
             ),
         RefFolder = expand(os.path.join(DB_DIR_MITOS, "databases/MITOS_DB/")
             ),
@@ -47,14 +47,14 @@ rule MitosMito:
         # Want to only take the first matching file from GetOrganelle >> Alphabetically "Complete" comes before "Contigs" thus will preffered take "Complete" fasta file
 
         ## DOCKER PATHS
-        InputSing = expand(os.path.join(DK_DIR, "04_GetOrganelle_Mito_Results/{sample}/*1.1.path_sequence.fasta"),
-            sample = config["genome_skimming"]["sample"]
+        InputSing = expand(os.path.join(DK_DIR, "04_GetOrganelle_Mito_Results/{SAMPLE}/*1.1.path_sequence.fasta"),
+            SAMPLE = config["genome_skimming"]["sample"]
             ),
-        OutputSing = expand(os.path.join(DK_DIR, "06_MITOS_Results/{sample}/AnnotationMitosDone.txt"),
-            sample = config["genome_skimming"]["sample"]
+        OutputSing = expand(os.path.join(DK_DIR, "06_MITOS_Results/{SAMPLE}/AnnotationMitosDone.txt"),
+            SAMPLE = config["genome_skimming"]["sample"]
             ),
-        FolderSing = expand(os.path.join(DK_DIR, "06_MITOS_Results/{sample}/"),
-            sample = config["genome_skimming"]["sample"]
+        FolderSing = expand(os.path.join(DK_DIR, "06_MITOS_Results/{SAMPLE}/"),
+            SAMPLE = config["genome_skimming"]["sample"]
             )
         # The output file will be saved in those folders, thus being accesable on your local system
     

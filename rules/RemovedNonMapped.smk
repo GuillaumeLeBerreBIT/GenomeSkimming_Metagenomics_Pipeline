@@ -1,36 +1,41 @@
 #!/usr/bin/python3
-############################# INTRODUCTION #############################
+############################# RULE #############################
 # 
-# 
+# Running a python script that iterates over the mapped results of a sample. 
+# Filtering for Unmapped, Not primary alignment and Supplementary alignment
+# Command:
+# "samtools view -@ 8 -S -F 2308 {sam_file_path} -o {args.OutputFilteredSam}/{basename[0]}_Filtered.sam"
 #
 ###################################################################
 # 
 ############################# MODULES #############################
-import os, glob
+import os
 
 ############################# RULES #############################
-
+#A python script that uses Samtools in the Shell
 rule SamtoolsView:
     input:
         expand(
-            os.path.join(DATA_DIR_MG, "{project}/07_BWA_Mapped_Sequences/{sample}_Mapping.done"),
-            project = config["metagenomics"]["project"], sample = config["metagenomics"]["sample"]
+            os.path.join(DATA_DIR_MG, "{PROJECT}/07_BWA_Mapped_Sequences/{SAMPLE}_Mapping.done"),
+            PROJECT = config["metagenomics"]["project"], SAMPLE = config["metagenomics"]["sample"]
             )
     output:
         expand(
-            os.path.join(DATA_DIR_MG, "{project}/08_Sam_Filtered/{sample}_Samtools_view.done"),
-            project = config["metagenomics"]["project"], sample = config["metagenomics"]["sample"]
+            os.path.join(DATA_DIR_MG, "{PROJECT}/08_Sam_Filtered/{SAMPLE}_Samtools_view.done"),
+            PROJECT = config["metagenomics"]["project"], SAMPLE = config["metagenomics"]["sample"]
             )
 
     conda:
         "../envs/samtools.yaml"
 
     params:
-        InputMappings = expand(os.path.join(DATA_DIR_MG, "{project}/07_BWA_Mapped_Sequences/{sample}/"),
-            project = config["metagenomics"]["project"], sample = config["metagenomics"]["sample"]
+        InputMappings = expand(
+            os.path.join(DATA_DIR_MG, "{PROJECT}/07_BWA_Mapped_Sequences/{SAMPLE}/"),
+            PROJECT = config["metagenomics"]["project"], SAMPLE = config["metagenomics"]["sample"]
             ),
-        OutputFiltered = expand(os.path.join(DATA_DIR_MG, "{project}/08_Sam_Filtered/{sample}/"),
-            project = config["metagenomics"]["project"], sample = config["metagenomics"]["sample"]
+        OutputFiltered = expand(
+            os.path.join(DATA_DIR_MG, "{PROJECT}/08_Sam_Filtered/{SAMPLE}/"),
+            PROJECT = config["metagenomics"]["project"], SAMPLE = config["metagenomics"]["sample"]
             ),
         Sample = config["metagenomics"]["sample"]
     

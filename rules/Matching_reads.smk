@@ -1,48 +1,49 @@
 # #!/usr/bin/python3
-############################# INTRODUCTION #############################
+############################# RULE #############################
 # 
-# 
+# Determining the taxonomic level for the reads from environmental samples. First will classify the reads on contamination database. 
+# The unclassified reads will be used to match the reads against Kraken Database of Genome Skimming data
 #
 ###################################################################
 # 
 ############################# MODULES #############################
-import os, glob
+import os
 
 ############################# RULES #############################
-# 
+# Do contamination filtering of the environmental samples. 
 rule ContaminationFiltering:
     input:
         PAIRED_1 = expand(
-            os.path.join(DATA_DIR_MG, "{project}/01_Trimmomatic_Results/{sample}_R1_Paired.fastq"),
-            project = config["metagenomics"]["project"], sample = config["metagenomics"]["sample"]
+            os.path.join(DATA_DIR_MG, "{PROJECT}/01_Trimmomatic_Results/{SAMPLE}_R1_Paired.fastq"),
+            PROJECT = config["metagenomics"]["project"], SAMPLE = config["metagenomics"]["sample"]
             ),
         UNPAIRED_1 = expand(
-            os.path.join(DATA_DIR_MG, "{project}/01_Trimmomatic_Results/{sample}_R1_Unpaired.fastq"),
-            project = config["metagenomics"]["project"], sample = config["metagenomics"]["sample"]
+            os.path.join(DATA_DIR_MG, "{PROJECT}/01_Trimmomatic_Results/{SAMPLE}_R1_Unpaired.fastq"),
+            PROJECT = config["metagenomics"]["project"], SAMPLE = config["metagenomics"]["sample"]
             ),
         PAIRED_2 = expand(
-            os.path.join(DATA_DIR_MG, "{project}/01_Trimmomatic_Results/{sample}_R2_Paired.fastq"),
-            project = config["metagenomics"]["project"], sample = config["metagenomics"]["sample"]
+            os.path.join(DATA_DIR_MG, "{PROJECT}/01_Trimmomatic_Results/{SAMPLE}_R2_Paired.fastq"),
+            PROJECT = config["metagenomics"]["project"], SAMPLE = config["metagenomics"]["sample"]
             ),
         UNPAIRED_2 = expand(
-            os.path.join(DATA_DIR_MG, "{project}/01_Trimmomatic_Results/{sample}_R2_Unpaired.fastq"),
-            project = config["metagenomics"]["project"], sample = config["metagenomics"]["sample"]
+            os.path.join(DATA_DIR_MG, "{PROJECT}/01_Trimmomatic_Results/{SAMPLE}_R2_Unpaired.fastq"),
+            PROJECT = config["metagenomics"]["project"], SAMPLE = config["metagenomics"]["sample"]
             )
     output:
         kraken = expand(
-            os.path.join(DATA_DIR_MG, "{project}/03_KrakenContaminant/{sample}_ClassifiedContamination.kraken"), 
-            project = config["metagenomics"]["project"], sample = config["metagenomics"]["sample"]
+            os.path.join(DATA_DIR_MG, "{PROJECT}/03_KrakenContaminant/{SAMPLE}_ClassifiedContamination.kraken"), 
+            PROJECT = config["metagenomics"]["project"], SAMPLE = config["metagenomics"]["sample"]
         ),
         unclassified = expand(
-            os.path.join(DATA_DIR_MG, "{project}/03_KrakenContaminant/{sample}_Unclassified.fasta"), 
-            project = config["metagenomics"]["project"], sample = config["metagenomics"]["sample"]
+            os.path.join(DATA_DIR_MG, "{PROJECT}/03_KrakenContaminant/{SAMPLE}_Unclassified.fasta"), 
+            PROJECT = config["metagenomics"]["project"], SAMPLE = config["metagenomics"]["sample"]
             )
         
     params:
-        dbk2 = os.path.join(KRAKEN_STAND, "K2_Standard_DB"),
+        dbk2 = config["metagenomics"]["KrakenStand"]
         smp_report = expand(
-            os.path.join(DATA_DIR_MG, "{project}/03_KrakenContaminant/{sample}SimpleReport.txt"),
-            project = config["metagenomics"]["project"], sample = config["metagenomics"]["sample"]
+            os.path.join(DATA_DIR_MG, "{PROJECT}/03_KrakenContaminant/{SAMPLE}SimpleReport.txt"),
+            PROJECT = config["metagenomics"]["project"], SAMPLE = config["metagenomics"]["sample"]
             )
 
     conda: 
@@ -54,17 +55,18 @@ rule ContaminationFiltering:
         {input.PAIRED_1} {input.UNPAIRED_1} {input.PAIRED_2} {input.UNPAIRED_2} > {output.kraken}
         """
 
+# Classify the reads against a custom created Genome Skim database. 
 rule ClassifyingReads:
     input:
         expand(
-            os.path.join(DATA_DIR_MG, "{project}/03_KrakenContaminant/{sample}_Unclassified.fasta"), 
-            project = config["metagenomics"]["project"], sample = config["metagenomics"]["sample"]
+            os.path.join(DATA_DIR_MG, "{PROJECT}/03_KrakenContaminant/{SAMPLE}_Unclassified.fasta"), 
+            PROJECT = config["metagenomics"]["project"], SAMPLE = config["metagenomics"]["sample"]
             )
     
     output:
         expand(
-            os.path.join(DATA_DIR_MG, "{project}/04_Classified_Kraken2/{sample}_Classified_Report.kraken"), 
-            project = config["metagenomics"]["project"], sample = config["metagenomics"]["sample"]
+            os.path.join(DATA_DIR_MG, "{PROJECT}/04_Classified_Kraken2/{SAMPLE}_Classified_Report.kraken"), 
+            PROJECT = config["metagenomics"]["project"], SAMPLE = config["metagenomics"]["sample"]
             )
     
     conda: 
@@ -73,11 +75,10 @@ rule ClassifyingReads:
     params:
         dbk2 = config["metagenomics"]["KrakenCustomDB"],
         kraken = expand(
-            os.path.join(DATA_DIR_MG, "{project}/04_Classified_Kraken2/{sample}_Classified.kraken"), 
-            project = config["metagenomics"]["project"], sample = config["metagenomics"]["sample"]
+            os.path.join(DATA_DIR_MG, "{PROJECT}/04_Classified_Kraken2/{SAMPLE}_Classified.kraken"), 
+            PROJECT = config["metagenomics"]["project"], SAMPLE = config["metagenomics"]["sample"]
             )
             
-
     shell:
         """
         kraken2 --threads 16 --use-names --db {params.dbk2} --report {output} {input} > {params.kraken}

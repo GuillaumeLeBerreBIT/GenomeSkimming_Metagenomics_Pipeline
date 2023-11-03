@@ -1,5 +1,5 @@
-# #!/usr/bin/python3
-############################# INTRODUCTION #############################
+#!/usr/bin/python3
+############################# RULE #############################
 #  
 # Want to merge the PE-reads using Fastq-join.
 # Followed by concatenating all the reads Merged or not in one file to create one big DB.
@@ -7,7 +7,7 @@
 ###################################################################
 # 
 ############################# MODULES #############################
-import os, glob
+import os
 
 ############################# RULES #############################
 
@@ -16,26 +16,26 @@ import os, glob
 rule FastqJoin:
     input: 
         PAIRED_1 = expand(
-            os.path.join(DATA_DIR_GS, "{project}/01_Trimmomatic_Results/{sample}_for_paired.fastq"),
-            project = config["genome_skimming"]["project"], sample=config["genome_skimming"]["sample"]
+            os.path.join(DATA_DIR_GS, "{PROJECT}/01_Trimmomatic_Results/{SAMPLE}_for_paired.fastq"),
+            PROJECT = config["genome_skimming"]["project"], SAMPLE = config["genome_skimming"]["sample"]
             ),
         PAIRED_2 = expand(
-            os.path.join(DATA_DIR_GS, "{project}/01_Trimmomatic_Results/{sample}_back_paired.fastq"),
-            project = config["genome_skimming"]["project"], sample=config["genome_skimming"]["sample"]
+            os.path.join(DATA_DIR_GS, "{PROJECT}/01_Trimmomatic_Results/{SAMPLE}_back_paired.fastq"),
+            PROJECT = config["genome_skimming"]["project"], SAMPLE = config["genome_skimming"]["sample"]
             )
     
     output:
         MERGED = expand(
-            os.path.join(DATA_DIR_GS, "{project}/03_Fastq_join_Results/{sample}/{sample}_Merged.fastq"),
-            project = config["genome_skimming"]["project"], sample=config["genome_skimming"]["sample"]
+            os.path.join(DATA_DIR_GS, "{PROJECT}/03_Fastq_join_Results/{SAMPLE}/{SAMPLE}_Merged.fastq"),
+            PROJECT = config["genome_skimming"]["project"], SAMPLE = config["genome_skimming"]["sample"]
             ),
         R1 = expand(
-            os.path.join(DATA_DIR_GS, "{project}/03_Fastq_join_Results/{sample}/{sample}_R1.fastq"),
-            project = config["genome_skimming"]["project"], sample=config["genome_skimming"]["sample"]
+            os.path.join(DATA_DIR_GS, "{PROJECT}/03_Fastq_join_Results/{SAMPLE}/{SAMPLE}_R1.fastq"),
+            PROJECT = config["genome_skimming"]["project"], SAMPLE = config["genome_skimming"]["sample"]
             ),
         R2 = expand(
-            os.path.join(DATA_DIR_GS, "{project}/03_Fastq_join_Results/{sample}/{sample}_R2.fastq"),
-            project = config["genome_skimming"]["project"], sample=config["genome_skimming"]["sample"]
+            os.path.join(DATA_DIR_GS, "{PROJECT}/03_Fastq_join_Results/{SAMPLE}/{SAMPLE}_R2.fastq"),
+            PROJECT = config["genome_skimming"]["project"], SAMPLE = config["genome_skimming"]["sample"]
             )
 
     conda:
@@ -50,29 +50,32 @@ rule FastqJoin:
 rule concatReads:
     input: 
         MERGED = expand(
-            os.path.join(DATA_DIR_GS, "{project}/03_Fastq_join_Results/{sample}/{sample}_Merged.fastq"),
-            project = config["genome_skimming"]["project"], sample=config["genome_skimming"]["sample"]
+            os.path.join(DATA_DIR_GS, "{PROJECT}/03_Fastq_join_Results/{SAMPLE}/{SAMPLE}_Merged.fastq"),
+            PROJECT = config["genome_skimming"]["project"], SAMPLE = config["genome_skimming"]["sample"]
             ),
         R1 = expand(
-            os.path.join(DATA_DIR_GS, "{project}/03_Fastq_join_Results/{sample}/{sample}_R1.fastq"),
-            project = config["genome_skimming"]["project"], sample=config["genome_skimming"]["sample"]
+            os.path.join(DATA_DIR_GS, "{PROJECT}/03_Fastq_join_Results/{SAMPLE}/{SAMPLE}_R1.fastq"),
+            PROJECT = config["genome_skimming"]["project"], SAMPLE = config["genome_skimming"]["sample"]
             ),
         R2 = expand(
-            os.path.join(DATA_DIR_GS, "{project}/03_Fastq_join_Results/{sample}/{sample}_R2.fastq"),
-            project = config["genome_skimming"]["project"], sample=config["genome_skimming"]["sample"]
+            os.path.join(DATA_DIR_GS, "{PROJECT}/03_Fastq_join_Results/{SAMPLE}/{SAMPLE}_R2.fastq"),
+            PROJECT = config["genome_skimming"]["project"], SAMPLE = config["genome_skimming"]["sample"]
             ),
         UNPAIRED_1 = expand(
-            os.path.join(DATA_DIR_GS, "{project}/01_Trimmomatic_Results/{sample}_for_unpaired.fastq"),
-            project = config["genome_skimming"]["project"], sample=config["genome_skimming"]["sample"]
+            os.path.join(DATA_DIR_GS, "{PROJECT}/01_Trimmomatic_Results/{SAMPLE}_for_unpaired.fastq"),
+            PROJECT = config["genome_skimming"]["project"], SAMPLE = config["genome_skimming"]["sample"]
             ),
         UNPAIRED_2 = expand(
-            os.path.join(DATA_DIR_GS, "{project}/01_Trimmomatic_Results/{sample}_back_unpaired.fastq"),
-            project = config["genome_skimming"]["project"], sample=config["genome_skimming"]["sample"]
+            os.path.join(DATA_DIR_GS, "{PROJECT}/01_Trimmomatic_Results/{SAMPLE}_back_unpaired.fastq"),
+            PROJECT = config["genome_skimming"]["project"], SAMPLE = config["genome_skimming"]["sample"]
             )
         
     
     output:
-        os.path.join(DATA_DIR_GS, "{project}/03_Fastq_join_Results/{sample}/{sample}_All_Reads_Concat.fastq")
+        expand(
+            os.path.join(DATA_DIR_GS, "{PROJECT}/03_Fastq_join_Results/{SAMPLE}/{SAMPLE}_All_Reads_Concat.fastq"),
+            PROJECT = config["genome_skimming"]["project"], SAMPLE = config["genome_skimming"]["sample"]
+            )
 
     shell:
         """

@@ -7,39 +7,39 @@
 ###################################################################
 # 
 ############################# MODULES #############################
-import os, glob
+import os
 
 ############################# RULES #############################
 # 
 rule GetOrganelleRibo:
     input:
         PAIRED_1 = expand(
-            os.path.join(DATA_DIR_GS, "{project}/01_Trimmomatic_Results/{sample}_for_paired.fastq"),
-            project = config["genome_skimming"]["project"], sample = config["genome_skimming"]["sample"]
+            os.path.join(DATA_DIR_GS, "{PROJECT}/01_Trimmomatic_Results/{SAMPLE}_for_paired.fastq"),
+            PROJECT = config["genome_skimming"]["project"], SAMPLE = config["genome_skimming"]["sample"]
             ),
         UNPAIRED_1 = expand(
-            os.path.join(DATA_DIR_GS, "{project}/01_Trimmomatic_Results/{sample}_for_unpaired.fastq"),
-            project = config["genome_skimming"]["project"], sample = config["genome_skimming"]["sample"]
+            os.path.join(DATA_DIR_GS, "{PROJECT}/01_Trimmomatic_Results/{SAMPLE}_for_unpaired.fastq"),
+            PROJECT = config["genome_skimming"]["project"], SAMPLE = config["genome_skimming"]["sample"]
             ),
         PAIRED_2 = expand(
-            os.path.join(DATA_DIR_GS, "{project}/01_Trimmomatic_Results/{sample}_back_paired.fastq"),
-            project = config["genome_skimming"]["project"], sample = config["genome_skimming"]["sample"]
+            os.path.join(DATA_DIR_GS, "{PROJECT}/01_Trimmomatic_Results/{SAMPLE}_back_paired.fastq"),
+            PROJECT = config["genome_skimming"]["project"], SAMPLE = config["genome_skimming"]["sample"]
             ),
         UNPAIRED_2 = expand(
-            os.path.join(DATA_DIR_GS, "{project}/01_Trimmomatic_Results/{sample}_back_unpaired.fastq"),
-            project = config["genome_skimming"]["project"], sample = config["genome_skimming"]["sample"]
+            os.path.join(DATA_DIR_GS, "{PROJECT}/01_Trimmomatic_Results/{SAMPLE}_back_unpaired.fastq"),
+            PROJECT = config["genome_skimming"]["project"], SAMPLE = config["genome_skimming"]["sample"]
             )
     output:
-        GetOrg = expand(os.path.join(DATA_DIR_GS, "{project}/05_GetOrganelle_Ribo_Results/{sample}/get_org.log.txt"),
-            project = config["genome_skimming"]["project"], sample = config["genome_skimming"]["sample"]
+        GetOrg = expand(os.path.join(DATA_DIR_GS, "{PROJECT}/05_GetOrganelle_Ribo_Results/{SAMPLE}/get_org.log.txt"),
+            PROJECT = config["genome_skimming"]["project"], SAMPLE = config["genome_skimming"]["sample"]
             )
 
     conda:
         "../envs/getorganelle.yaml"
 
     params:
-        GetOrgFolder = expand(os.path.join(DATA_DIR_GS, "{project}/05_GetOrganelle_Ribo_Results/{sample}/"),
-            project = config["genome_skimming"]["project"], sample = config["genome_skimming"]["sample"]
+        GetOrgFolder = expand(os.path.join(DATA_DIR_GS, "{PROJECT}/05_GetOrganelle_Ribo_Results/{SAMPLE}/"),
+            PROJECT = config["genome_skimming"]["project"], SAMPLE = config["genome_skimming"]["sample"]
             ),
         Label_DB = "databases/GetOrg_Custom_DB/label_database.fasta",
         Seed_DB = "databases/GetOrg_Custom_DB/seed_database.fasta"

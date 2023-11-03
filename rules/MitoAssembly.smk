@@ -1,12 +1,12 @@
-# #!/usr/bin/python3
-############################# INTRODUCTION #############################
+#!/usr/bin/python3
+############################# RULE #############################
 # 
 # The trimmed reads can be used for the mitochondrial assembly performed by GetOrganelle. 
 # 
 ###################################################################
 # 
 ############################# MODULES #############################
-import os, glob
+import os
 
 ############################# RULES #############################
 # This will perform the mitochondrial genome assembly
@@ -16,32 +16,32 @@ import os, glob
 rule GetOrganelleMito:
     input:
         PAIRED_1 = expand(
-            os.path.join(DATA_DIR_GS, "{project}/01_Trimmomatic_Results/{sample}_for_paired.fastq"),
-            project = config["genome_skimming"]["project"], sample = config["genome_skimming"]["sample"]
+            os.path.join(DATA_DIR_GS, "{PROJECT}/01_Trimmomatic_Results/{SAMPLE}_for_paired.fastq"),
+            PROJECT = config["genome_skimming"]["project"], SAMPLE = config["genome_skimming"]["sample"]
             ),
         UNPAIRED_1 = expand(
-            os.path.join(DATA_DIR_GS, "{project}/01_Trimmomatic_Results/{sample}_for_unpaired.fastq"),
-            project = config["genome_skimming"]["project"], sample = config["genome_skimming"]["sample"]
+            os.path.join(DATA_DIR_GS, "{PROJECT}/01_Trimmomatic_Results/{SAMPLE}_for_unpaired.fastq"),
+            PROJECT = config["genome_skimming"]["project"], SAMPLE = config["genome_skimming"]["sample"]
             ),
         PAIRED_2 = expand(
-            os.path.join(DATA_DIR_GS, "{project}/01_Trimmomatic_Results/{sample}_back_paired.fastq"),
-            project = config["genome_skimming"]["project"], sample = config["genome_skimming"]["sample"]
+            os.path.join(DATA_DIR_GS, "{PROJECT}/01_Trimmomatic_Results/{SAMPLE}_back_paired.fastq"),
+            PROJECT = config["genome_skimming"]["project"], SAMPLE = config["genome_skimming"]["sample"]
             ),
         UNPAIRED_2 = expand(
-            os.path.join(DATA_DIR_GS, "{project}/01_Trimmomatic_Results/{sample}_back_unpaired.fastq"),
-            project = config["genome_skimming"]["project"], sample = config["genome_skimming"]["sample"]
+            os.path.join(DATA_DIR_GS, "{PROJECT}/01_Trimmomatic_Results/{SAMPLE}_back_unpaired.fastq"),
+            PROJECT = config["genome_skimming"]["project"], SAMPLE = config["genome_skimming"]["sample"]
             )
     output:
-        expand(os.path.join(DATA_DIR_GS, "{project}/04_GetOrganelle_Mito_Results/{sample}/get_org.log.txt"),
-            project = config["genome_skimming"]["project"], sample = config["genome_skimming"]["sample"]
+        expand(os.path.join(DATA_DIR_GS, "{PROJECT}/04_GetOrganelle_Mito_Results/{SAMPLE}/get_org.log.txt"),
+            PROJECT = config["genome_skimming"]["project"], SAMPLE = config["genome_skimming"]["sample"]
             )
 
     conda:
         "../envs/getorganelle.yaml"
 
     params:
-        GetOrgFolder = expand(os.path.join(DATA_DIR_GS, "{project}/04_GetOrganelle_Mito_Results/{sample}/"),
-            project = config["genome_skimming"]["project"], sample = config["genome_skimming"]["sample"]
+        GetOrgFolder = expand(os.path.join(DATA_DIR_GS, "{PROJECT}/04_GetOrganelle_Mito_Results/{SAMPLE}/"),
+            PROJECT = config["genome_skimming"]["project"], SAMPLE = config["genome_skimming"]["sample"]
             )
 
     threads: 8

@@ -1,4 +1,4 @@
-# #!/usr/bin/python3
+#!/usr/bin/python3
 ############################# INTRODUCTION #############################
 # 
 # This rule does the preprocessing of the FASTQ data. It does a Quality Control of the FASTQ data
@@ -8,7 +8,7 @@
 ###################################################################
 # 
 ############################# MODULES #############################
-import os, glob
+import os
 
 ############################# RULES #############################
 # Trimmomatic removes the adapters from Illumina data. Reads matching in forward and reverse will be placed in a paired file. 
@@ -16,29 +16,29 @@ import os, glob
 rule Trimmomatic:
     input:
         FOR = expand(
-            os.path.join(DATA_DIR_MG, "{SEQ_DIR}/{sample}_R1_001.fastq.gz"),
-            SEQ_DIR = config["metagenomics"]["seqdata"], sample=config["metagenomics"]["sample"]
+            os.path.join(DATA_DIR_MG, "{SEQ_DIR}/{SAMPLE}_R1_001.fastq.gz"),
+            SEQ_DIR = config["metagenomics"]["seqdata"], SAMPLE = config["metagenomics"]["sample"]
             ),
         REV = expand(
-            os.path.join(DATA_DIR_MG, "{SEQ_DIR}/{sample}_R2_001.fastq.gz"), 
-            SEQ_DIR = config["metagenomics"]["seqdata"], sample=config["metagenomics"]["sample"]
+            os.path.join(DATA_DIR_MG, "{SEQ_DIR}/{SAMPLE}_R2_001.fastq.gz"), 
+            SEQ_DIR = config["metagenomics"]["seqdata"], SAMPLE = config["metagenomics"]["sample"]
             )
     output:
         PAIRED_1 = expand(
-            os.path.join(DATA_DIR_MG, "{project}/01_Trimmomatic_Results/{sample}_R1_Paired.fastq"),
-            project = config["metagenomics"]["project"], sample=config["metagenomics"]["sample"]
+            os.path.join(DATA_DIR_MG, "{PROJECT}/01_Trimmomatic_Results/{SAMPLE}_R1_Paired.fastq"),
+            PROJECT = config["metagenomics"]["project"], SAMPLE = config["metagenomics"]["sample"]
             ),
         UNPAIRED_1 = expand(
-            os.path.join(DATA_DIR_MG, "{project}/01_Trimmomatic_Results/{sample}_R1_Unpaired.fastq"),
-            project = config["metagenomics"]["project"], sample=config["metagenomics"]["sample"]
+            os.path.join(DATA_DIR_MG, "{PROJECT}/01_Trimmomatic_Results/{SAMPLE}_R1_Unpaired.fastq"),
+            PROJECT = config["metagenomics"]["project"], SAMPLE = config["metagenomics"]["sample"]
             ),
         PAIRED_2 = expand(
-            os.path.join(DATA_DIR_MG, "{project}/01_Trimmomatic_Results/{sample}_R2_Paired.fastq"),
-            project = config["metagenomics"]["project"], sample=config["metagenomics"]["sample"]
+            os.path.join(DATA_DIR_MG, "{PROJECT}/01_Trimmomatic_Results/{SAMPLE}_R2_Paired.fastq"),
+            PROJECT = config["metagenomics"]["project"], SAMPLE = config["metagenomics"]["sample"]
             ),
         UNPAIRED_2 = expand(
-            os.path.join(DATA_DIR_MG, "{project}/01_Trimmomatic_Results/{sample}_R2_Unpaired.fastq"),
-            project = config["metagenomics"]["project"], sample=config["metagenomics"]["sample"]
+            os.path.join(DATA_DIR_MG, "{PROJECT}/01_Trimmomatic_Results/{SAMPLE}_R2_Unpaired.fastq"),
+            PROJECT = config["metagenomics"]["project"], SAMPLE = config["metagenomics"]["sample"]
             )
 
     conda: 
@@ -54,42 +54,42 @@ rule Trimmomatic:
 rule FastQ:
     input:
         PAIRED_1 = expand(
-            os.path.join(DATA_DIR_MG, "{project}/01_Trimmomatic_Results/{sample}_R1_Paired.fastq"),
-            project = config["metagenomics"]["project"], sample = config["metagenomics"]["sample"]
+            os.path.join(DATA_DIR_MG, "{PROJECT}/01_Trimmomatic_Results/{SAMPLE}_R1_Paired.fastq"),
+            PROJECT = config["metagenomics"]["project"], SAMPLE = config["metagenomics"]["sample"]
             ),
         UNPAIRED_1 = expand(
-            os.path.join(DATA_DIR_MG, "{project}/01_Trimmomatic_Results/{sample}_R1_Unpaired.fastq"),
-            project = config["metagenomics"]["project"], sample = config["metagenomics"]["sample"]
+            os.path.join(DATA_DIR_MG, "{PROJECT}/01_Trimmomatic_Results/{SAMPLE}_R1_Unpaired.fastq"),
+            PROJECT = config["metagenomics"]["project"], SAMPLE = config["metagenomics"]["sample"]
             ),
         PAIRED_2 = expand(
-            os.path.join(DATA_DIR_MG, "{project}/01_Trimmomatic_Results/{sample}_R2_Paired.fastq"),
-            project = config["metagenomics"]["project"], sample = config["metagenomics"]["sample"]
+            os.path.join(DATA_DIR_MG, "{PROJECT}/01_Trimmomatic_Results/{SAMPLE}_R2_Paired.fastq"),
+            PROJECT = config["metagenomics"]["project"], SAMPLE = config["metagenomics"]["sample"]
             ),
         UNPAIRED_2 = expand(
-            os.path.join(DATA_DIR_MG, "{project}/01_Trimmomatic_Results/{sample}_R2_Unpaired.fastq"),
-            project = config["metagenomics"]["project"], sample = config["metagenomics"]["sample"]
+            os.path.join(DATA_DIR_MG, "{PROJECT}/01_Trimmomatic_Results/{SAMPLE}_R2_Unpaired.fastq"),
+            PROJECT = config["metagenomics"]["project"], SAMPLE = config["metagenomics"]["sample"]
             )
     
     output:
-        PAIRED_1 = expand(os.path.join(DATA_DIR_MG, "{project}/02_FastQC_Results/{sample}_R1_Paired_fastqc.html"),
-            project = config["metagenomics"]["project"], sample = config["metagenomics"]["sample"]
+        PAIRED_1 = expand(os.path.join(DATA_DIR_MG, "{PROJECT}/02_FastQC_Results/{SAMPLE}_R1_Paired_fastqc.html"),
+            PROJECT = config["metagenomics"]["project"], SAMPLE = config["metagenomics"]["sample"]
             ),
-        UNPAIRED_1 = expand(os.path.join(DATA_DIR_MG, "{project}/02_FastQC_Results/{sample}_R1_Unpaired_fastqc.html"),
-            project = config["metagenomics"]["project"], sample = config["metagenomics"]["sample"]
+        UNPAIRED_1 = expand(os.path.join(DATA_DIR_MG, "{PROJECT}/02_FastQC_Results/{SAMPLE}_R1_Unpaired_fastqc.html"),
+            PROJECT = config["metagenomics"]["project"], SAMPLE = config["metagenomics"]["sample"]
             ),
-        PAIRED_2 = expand(os.path.join(DATA_DIR_MG, "{project}/02_FastQC_Results/{sample}_R2_Paired_fastqc.html"),
-            project = config["metagenomics"]["project"], sample = config["metagenomics"]["sample"]
+        PAIRED_2 = expand(os.path.join(DATA_DIR_MG, "{PROJECT}/02_FastQC_Results/{SAMPLE}_R2_Paired_fastqc.html"),
+            PROJECT = config["metagenomics"]["project"], SAMPLE = config["metagenomics"]["sample"]
             ),
-        UNPAIRED_2 = expand(os.path.join(DATA_DIR_MG, "{project}/02_FastQC_Results/{sample}_R2_Unpaired_fastqc.html"),
-            project = config["metagenomics"]["project"], sample = config["metagenomics"]["sample"]
+        UNPAIRED_2 = expand(os.path.join(DATA_DIR_MG, "{PROJECT}/02_FastQC_Results/{SAMPLE}_R2_Unpaired_fastqc.html"),
+            PROJECT = config["metagenomics"]["project"], SAMPLE = config["metagenomics"]["sample"]
             )
 
     conda:
         "../envs/fastqc.yaml"
 
     params:
-        FastqFol = expand(os.path.join(DATA_DIR_MG, "{project}/02_FastQC_Results/"),
-            project = config["metagenomics"]["project"]
+        FastqFol = expand(os.path.join(DATA_DIR_MG, "{PROJECT}/02_FastQC_Results/"),
+            PROJECT = config["metagenomics"]["project"]
             )
 
     shell:
