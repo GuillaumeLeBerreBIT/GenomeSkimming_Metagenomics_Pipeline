@@ -1,6 +1,6 @@
 ############################# WORKFLOW #############################
 # 
-# Gamma-Delta_workflow of the Metagenomics workflow will perform mapping of environmental smaples
+# Gamma-Delta_workflow of the Metagenomics workflow will perform mapping of environmental samples
 # 1) The reads are filtered and matched against a Custom Genome Skimming database made with KRAKEN and BRACKEN
 #
 ###################################################################
