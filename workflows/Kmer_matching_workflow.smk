@@ -1,9 +1,10 @@
-############################# INTRODUCTION #############################
+############################# WORKFLOW #############################
 # 
-# 
+# Gamma-Delta_workflow of the Metagenomics workflow will perform mapping of environmental smaples
+# 1) The reads are filtered and matched against a Custom Genome Skimming database made with KRAKEN and BRACKEN
 #
 ###################################################################
-
+#
 ############################# RULES - PROGRAMS #############################
 include:
     '../rules/PreprocessingStand.smk'
@@ -11,21 +12,23 @@ include:
     '../rules/Matching_reads.smk'
 include: 
     '../rules/Bracken.smk'
+
 ############################# RULE - RESULTING ANALYSIS #############################
-# 
+# This functions as an "rule all" where the input is expected to be the finalized output. 
+# By using touch can create an empty file to fake the output. 
 rule Analysis:
     input:
         expand(
                 [
-                os.path.join(DATA_DIR_MG, "{project}/02_FastQC_Results/{sample}_R1_Paired_fastqc.html"),
-                os.path.join(DATA_DIR_MG, "{project}/02_FastQC_Results/{sample}_R1_Unpaired_fastqc.html"),
-                os.path.join(DATA_DIR_MG, "{project}/02_FastQC_Results/{sample}_R2_Paired_fastqc.html"),
-                os.path.join(DATA_DIR_MG, "{project}/02_FastQC_Results/{sample}_R2_Unpaired_fastqc.html"),                    
-                os.path.join(DATA_DIR_MG, "{project}/05_BRACKEN_Results/{sample}_Bracken_Classified.bracken")
+                os.path.join(DATA_DIR_MG, "{PROJECT}/02_FastQC_Results/{SAMPLE}_R1_Paired_fastqc.html"),
+                os.path.join(DATA_DIR_MG, "{PROJECT}/02_FastQC_Results/{SAMPLE}_R1_Unpaired_fastqc.html"),
+                os.path.join(DATA_DIR_MG, "{PROJECT}/02_FastQC_Results/{SAMPLE}_R2_Paired_fastqc.html"),
+                os.path.join(DATA_DIR_MG, "{PROJECT}/02_FastQC_Results/{SAMPLE}_R2_Unpaired_fastqc.html"),                    
+                os.path.join(DATA_DIR_MG, "{PROJECT}/05_BRACKEN_Results/{SAMPLE}_Bracken_Classified.bracken")
                     
                 ],
-                project = config["metagenomics"]["project"],
-                sample = config["metagenomics"]["sample"]                
+                PROJECT = config["metagenomics"]["project"],
+                SAMPLE = config["metagenomics"]["sample"]                
             )
     output:
         touch('Kmer_matching_Analysis.done')

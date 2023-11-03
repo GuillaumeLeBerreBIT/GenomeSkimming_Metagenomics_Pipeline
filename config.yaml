@@ -13,7 +13,7 @@ pipeline: "Metagenomics"
 # Metagenomics
 
 genome_skimming:
-  sample: 'MB_GS_E_sanguinea_S39'
+  sample: 'MB_GS_N_latericeus_S41'
   
   seqdata: "00_ZAND_RAW_SEQ/01_SEQ_GS"
   # BAR_GS: "00_BAR_RAW_SEQ/01_SEQ_GS"
@@ -30,7 +30,7 @@ genome_skimming:
   dockerdir: "/home/genomics/gleberre/01_Research_BAR_ZAND/03_Pipeline_development/mnt"
   # The direcotory used when docker/singularity is initialized 
 
-  workflow: "AllAssemblies" 
+  workflow: "Assembly" 
   # Assembly: To perform the Assemblies of mtDNA, rDNA and Nuclear DNA. 
   # AssemblyFree: Perfrom the k-mer matching of the Genome Skim reads using KRAKEN2
   # KrakenBuildDB: Build a custom KRAKEN2 database from all gathered reads after Aseembly Free
@@ -38,9 +38,9 @@ genome_skimming:
   # AllAssemblies: Perfrom the Assembly methods for mtDNA, rDNA and Nuclear DNA togheter with the k-mer matching og the GenomeSkim reads.
   # AllAssemblies_KrakenBuild: Perfrom the Assembly methods for mtDNA, rDNA and Nuclear DNA togheter with the k-mer matching og the GenomeSkim reads. Finalized with the creation of the GenomeSkim database with KRAKEN2. 
   
-  species: "Eumida_sanguinea"
+  species: "Notomastus_latericeus"
 
-  taxid: "329452" 
+  taxid: "167831" 
   # Need to add the Taxonomic ID when performing Assembly Free Analysis
   # Pplatessa: 8262
   # Sscombrus: 13677
@@ -56,6 +56,8 @@ genome_skimming:
   # Nephtys hombergii: 36121
   # Owenia fusiformis: 6347
   # Eumida sanguinea: 329452
+  # Nephtys longosetosa: 397560
+  # Notomastus latericeus: 167831
 
   KrakenDB: "GenomeSkimDB"
   # Name of the KRAKEN2 Database 
@@ -70,24 +72,24 @@ mitos:
 # Only need to full in performing: Assembly, AllAssemblies, AllAssemblies_KrakenBuild
 genbank:
   ## HEADER
-  locus: "Eumida_sanguinea_mtDNA"
+  locus: "Notomastus_latericeus_mtDNA"
   bioproject: "Mitochondrial_Assembly"
   sample_type: "ILVO - RMG"
-  taxonomy: "Eumida_sanguinea"
-  organism_header: "Eumida sanguinea"
+  taxonomy: "Notomastus_latericeus"
+  organism_header: "Notomastus latericeus"
   mol_type: "DNA"
   topology: "circular"
   # Could be circular or linear 
 
   ## FEATURE TABLE
   # SOURCE
-  organism: "Eumida sanguinea"
+  organism: "Notomastus latericeus"
   organelle: "mitochondrion"
 
 ## METAGENOMICS
 metagenomics:
   
-  sample: 'BAR_MG_P_platessa_S23'
+  sample: 'BAR_MG_Field_3_S28'
   
   workflow: "Gamma_Delta"
   # Kmer_Matching: To perform k-mer matching of the reads against a "Custom" created database
