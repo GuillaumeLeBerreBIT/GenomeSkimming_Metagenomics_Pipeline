@@ -205,6 +205,26 @@ elif config["pipeline"] == "Metagenomics":
                     PROJECT = config["genome_skimming"]["project"],
                     SAMPLE = config["genome_skimming"]["sample"]                
                 )
+    # This performs the k-mer matching of reads against a custom created KRAKEN Genome Skimming database. Combined with 
+    # the mapping of reads against a self-created custom reference mitochondrial genome and ribosomal repeat
+    elif config["metagenomics"]["workflow"] == "Gamma_Delta_Kmer":
+        include:
+            "workflows/Gamma-Delta_Kmer_workflow.smk"
+        rule all:
+            input:
+                expand(
+                    [
+                        os.path.join(DATA_DIR_MG, "{PROJECT}/02_FastQC_Results/{SAMPLE}_R1_Paired_fastqc.html"),
+                        os.path.join(DATA_DIR_MG, "{PROJECT}/02_FastQC_Results/{SAMPLE}_R1_Unpaired_fastqc.html"),
+                        os.path.join(DATA_DIR_MG, "{PROJECT}/02_FastQC_Results/{SAMPLE}_R2_Paired_fastqc.html"),
+                        os.path.join(DATA_DIR_MG, "{PROJECT}/02_FastQC_Results/{SAMPLE}_R2_Unpaired_fastqc.html"),
+                        os.path.join(DATA_DIR_MG, "{PROJECT}/09_Gamma_Delta_Results/{SAMPLE}_Gamma_Delta.csv"),
+                        os.path.join(DATA_DIR_MG, "{PROJECT}/05_BRACKEN_Results/{SAMPLE}_Bracken_Classified.bracken")
+                        
+                    ],
+                    PROJECT = config["genome_skimming"]["project"],
+                    SAMPLE = config["genome_skimming"]["sample"]                
+                )
 
 else:
     # If non of the defining pipelines is chosen. 
