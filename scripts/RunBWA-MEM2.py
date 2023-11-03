@@ -15,29 +15,36 @@ parser.add_argument('-io', '--IndexOutput', type = str, required = True,
                     help ='Name of the sample')
 parser.add_argument('-mo', '--MappingOutput', type = str, required = True, 
                     help ='Name of the sample')
+parser.add_argument('-t', '--Touch', type = str, required = False, 
+                    help ='Name of the sample')
 args = parser.parse_args()
 
-# If the folder to store the Mapped Indexes is present will skip
-if os.path.exists(args.IndexOutput):
-    pass
-# If the folder is not present it will >>
-else:
-    # Split up the full path of the folder
-    splitted_path = args.IndexOutput.split('/')
-    # Cleaning the list containg empty indexes
-    splitted_path_cleaned = [d for d in splitted_path if d != '']
-    # Start from the root of the path
-    path_to_check = '/'    
-    # Loop over all the directories
-    for directory in splitted_path_cleaned:
-        # Iterate over the paths
-        path_to_check += f"{str(directory)}/"
-        # If it exists do nothing
-        if os.path.exists(path_to_check):
-            continue
-        # If not create the folder
-        else: 
-            os.mkdir(path_to_check)
+def check_path(path_to_check): 
+    # If the folder to store the Mapped Indexes is present will skip
+    if os.path.exists(path_to_check):
+        pass
+    # If the folder is not present it will >>
+    else:
+        # Split up the full path of the folder
+        splitted_path = path_to_check.split('/')
+        # Cleaning the list containg empty indexes
+        splitted_path_cleaned = [d for d in splitted_path if d != '']
+        # Start from the root of the path
+        path_to_check = '/'    
+        # Loop over all the directories
+        for directory in splitted_path_cleaned:
+            # Iterate over the paths
+            path_to_check += f"{str(directory)}/"
+            # If it exists do nothing
+            if os.path.exists(path_to_check):
+                continue
+            # If not create the folder
+            else: 
+                os.mkdir(path_to_check)
+
+# To see whether the given folder exists or not
+check_path(args.IndexOutput)     
+check_path(args.MappingOutput)      
 
 # Will read in the folder with the files that need to be indexed
 for file in os.listdir(args.ReferenceFastaFolder):
@@ -54,3 +61,5 @@ for file in os.listdir(args.ReferenceFastaFolder):
     subprocess.run(f"bwa-mem2 index -p {file_index} {file_path}", shell = True)
     # If the indexing is done start the alignment of the file. 
     subprocess.run(f"bwa-mem2 mem -t 8 {file_index} {args.PE_1} {args.PE_2} -o {args.MappingOutput}/{args.sample}_{file_splitted[0]}.sam", shell = True)
+
+subprocess.run(f"touch {args.Touch}", shell = True)

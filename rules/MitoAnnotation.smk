@@ -38,8 +38,8 @@ rule MitosMito:
         MitosFolder = expand(os.path.join(DATA_DIR_GS, "{project}/06_MITOS_Results/{sample}/"),
             project = config["genome_skimming"]["project"], sample = config["genome_skimming"]["sample"]
             ),
-        RefFolder = expand(os.path.join(DB_DIR, "databases/MITOS_DB/"),
-            DB_DIR = config['mitos']['database']),
+        RefFolder = expand(os.path.join(DB_DIR_MITOS, "databases/MITOS_DB/")
+            ),
         MitRefSeq = "refseq89m/",
         gencode = config['mitos']['gencode'],
         # This is to only take one FASTA file as input for the annotation

@@ -52,6 +52,5 @@ rule BWA_Index:
 
     shell:
         """
-        python3 scripts/RunBWA-MEM2.py -f {params.FolderReferenceFasta} -1 {input.PAIRED_1} -2 {input.PAIRED_2} -s {params.Sample} -io {params.OutputFolderIndexes} -mo {params.OutputMappings}
-        touch {output}
+        python3 scripts/RunBWA-MEM2.py -f {params.FolderReferenceFasta} -1 {input.PAIRED_1} -2 {input.PAIRED_2} -s {params.Sample} -io {params.OutputFolderIndexes} -mo {params.OutputMappings} -t {output}
         """
