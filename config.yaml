@@ -8,12 +8,12 @@
 # ZAND: 
 # snakemake --use-conda --use-singularity --singularity-args "-B /home/genomics/gleberre/01_Research_BAR_ZAND/02_ZAND/01_ZAND_GS:/home/genomics/gleberre/01_Research_BAR_ZAND/03_Pipeline_development/mnt" --cores 24
 
-pipeline: "Metagenomics" 
+pipeline: "Genome_Skimming" 
 # Genome_Skimming
 # Metagenomics
 
 genome_skimming:
-  sample: 'MB_GS_N_latericeus_S41'
+  sample: 'MB_GS_N_caeca_S35'
   
   seqdata: "00_ZAND_RAW_SEQ/01_SEQ_GS"
   # BAR_GS: "00_BAR_RAW_SEQ/01_SEQ_GS"
@@ -28,9 +28,12 @@ genome_skimming:
   # ZAND: "/home/genomics/gleberre/01_Research_BAR_ZAND/02_ZAND/"
 
   dockerdir: "/home/genomics/gleberre/01_Research_BAR_ZAND/03_Pipeline_development/mnt"
-  # The direcotory used when docker/singularity is initialized 
+  # The directory used when docker/singularity is initialized 
 
-  workflow: "Assembly" 
+  KrakenStand: "/home/genomics/gleberre/01_Research_BAR_ZAND/03_Pipeline_development/databases/K2_Standard_DB/"
+  # Path to the Kraken Standard database for contamination filtering. 
+
+  workflow: "AllAssemblies" 
   # Assembly: To perform the Assemblies of mtDNA, rDNA and Nuclear DNA. 
   # AssemblyFree: Perfrom the k-mer matching of the Genome Skim reads using KRAKEN2
   # KrakenBuildDB: Build a custom KRAKEN2 database from all gathered reads after Aseembly Free
@@ -38,9 +41,9 @@ genome_skimming:
   # AllAssemblies: Perfrom the Assembly methods for mtDNA, rDNA and Nuclear DNA togheter with the k-mer matching og the GenomeSkim reads.
   # AllAssemblies_KrakenBuild: Perfrom the Assembly methods for mtDNA, rDNA and Nuclear DNA togheter with the k-mer matching og the GenomeSkim reads. Finalized with the creation of the GenomeSkim database with KRAKEN2. 
   
-  species: "Notomastus_latericeus"
+  species: "Nephtys_caeca"
 
-  taxid: "167831" 
+  taxid: "714603" 
   # Need to add the Taxonomic ID when performing Assembly Free Analysis
   # Pplatessa: 8262
   # Sscombrus: 13677
@@ -72,18 +75,18 @@ mitos:
 # Only need to full in performing: Assembly, AllAssemblies, AllAssemblies_KrakenBuild
 genbank:
   ## HEADER
-  locus: "Notomastus_latericeus_mtDNA"
+  locus: "Nephtys_caeca_mtDNA"
   bioproject: "Mitochondrial_Assembly"
   sample_type: "ILVO - RMG"
-  taxonomy: "Notomastus_latericeus"
-  organism_header: "Notomastus latericeus"
+  taxonomy: "Nephtys_caeca"
+  organism_header: "Nephtys caeca"
   mol_type: "DNA"
   topology: "circular"
   # Could be circular or linear 
 
   ## FEATURE TABLE
   # SOURCE
-  organism: "Notomastus latericeus"
+  organism: "Nephtys_caeca"
   organelle: "mitochondrion"
 
 ## METAGENOMICS
@@ -93,7 +96,8 @@ metagenomics:
   
   workflow: "Gamma_Delta"
   # Kmer_Matching: To perform k-mer matching of the reads against a "Custom" created database
-  # Gamma_Delta: 
+  # Gamma_Delta: Perform the mapping of reads against reference mitochondrial organelle and ribosomal repeats
+  # Gamma_Delta_Kmer: Will do both the mapping as well as the matching of the reads
   
   seqdata: "00_BAR_RAW_SEQ/02_SEQ_MG"
   # BAR_MG: "00_BAR_RAW_SEQ/02_SEQ_MG"
@@ -110,9 +114,11 @@ metagenomics:
   dockerdir: "/home/genomics/gleberre/01_Research_BAR_ZAND/03_Pipeline_development/mnt"
   # The directory used when docker/singularity is initialized 
 
-  KrakenStand: "/home/genomics/gleberre/01_Research_BAR_ZAND/03_Pipeline_development/databases"
+  KrakenStand: "/home/genomics/gleberre/01_Research_BAR_ZAND/03_Pipeline_development/databases/K2_Standard_DB/"
+  # Location to the KRAKEN Standard database for contamination filtering
 
   KrakenCustomDB: "/home/genomics/gleberre/01_Research_BAR_ZAND/01_BAR/01_BAR_GS/15_Kraken_Databases/GenomeSkimDB"
+  # Path to the (Custom) Kraken database for matching the reads against
 
   FolderReferenceFasta: "/home/genomics/gleberre/01_Research_BAR_ZAND/01_BAR/01_BAR_GS/17_Reference_Mapping_MG"
   # BAR: "/home/genomics/gleberre/01_Research_BAR_ZAND/01_BAR/01_BAR_GS/17_Reference_Mapping_MG" 
