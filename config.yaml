@@ -13,7 +13,7 @@ pipeline: "Genome_Skimming"
 # Metagenomics
 
 genome_skimming:
-  sample: 'MB_GS_N_caeca_S35'
+  sample: 'MB_GS_N_latericeus_S41'
   
   seqdata: "00_ZAND_RAW_SEQ/01_SEQ_GS"
   # BAR_GS: "00_BAR_RAW_SEQ/01_SEQ_GS"
@@ -33,7 +33,7 @@ genome_skimming:
   KrakenStand: "/home/genomics/gleberre/01_Research_BAR_ZAND/03_Pipeline_development/databases/K2_Standard_DB/"
   # Path to the Kraken Standard database for contamination filtering. 
 
-  workflow: "AllAssemblies" 
+  workflow: "AssemblyFree" 
   # Assembly: To perform the Assemblies of mtDNA, rDNA and Nuclear DNA. 
   # AssemblyFree: Perfrom the k-mer matching of the Genome Skim reads using KRAKEN2
   # KrakenBuildDB: Build a custom KRAKEN2 database from all gathered reads after Aseembly Free
@@ -41,9 +41,9 @@ genome_skimming:
   # AllAssemblies: Perfrom the Assembly methods for mtDNA, rDNA and Nuclear DNA togheter with the k-mer matching og the GenomeSkim reads.
   # AllAssemblies_KrakenBuild: Perfrom the Assembly methods for mtDNA, rDNA and Nuclear DNA togheter with the k-mer matching og the GenomeSkim reads. Finalized with the creation of the GenomeSkim database with KRAKEN2. 
   
-  species: "Nephtys_caeca"
+  species: "Notomastus_latericeus"
 
-  taxid: "714603" 
+  taxid: "167831" 
   # Need to add the Taxonomic ID when performing Assembly Free Analysis
   # Pplatessa: 8262
   # Sscombrus: 13677
@@ -62,7 +62,7 @@ genome_skimming:
   # Nephtys longosetosa: 397560
   # Notomastus latericeus: 167831
 
-  KrakenDB: "GenomeSkimDB"
+  KrakenDB: "MacrobenthosDB"
   # Name of the KRAKEN2 Database 
 
 # For the Annotation by MITOS. >> NCBI codon table
@@ -75,19 +75,20 @@ mitos:
 # Only need to full in performing: Assembly, AllAssemblies, AllAssemblies_KrakenBuild
 genbank:
   ## HEADER
-  locus: "Nephtys_caeca_mtDNA"
-  bioproject: "Mitochondrial_Assembly"
+  locus_mt: "Notomastus_latericeus_mtDNA"
+  locus_rdna: "Notomastus_latericeus_rDNA"
+
+  bioproject_mt: "Mitochondrial_Assembly"
+  bioproject_rdna: "Ribosomal_Assembly"
+
   sample_type: "ILVO - RMG"
-  taxonomy: "Nephtys_caeca"
-  organism_header: "Nephtys caeca"
+  taxonomy: "Notomastus_latericeus"
+  organism_header: "Notomastus latericeus"
   mol_type: "DNA"
-  topology: "circular"
-  # Could be circular or linear 
 
   ## FEATURE TABLE
   # SOURCE
-  organism: "Nephtys_caeca"
-  organelle: "mitochondrion"
+  organism: "Notomastus_latericeus"
 
 ## METAGENOMICS
 metagenomics:

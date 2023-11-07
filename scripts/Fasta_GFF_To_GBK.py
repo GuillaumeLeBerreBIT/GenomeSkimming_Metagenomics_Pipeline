@@ -22,8 +22,6 @@ parser.add_argument('-gbk', '--genbank', type = str, required = True,
                     help ='Output name of the Genbank file')
 parser.add_argument('-oi', '--organism', type = str, required = True, 
                     help ='Name of the Organism to parse to the Feature table - Source')
-parser.add_argument('-oe', '--organelle', type = str, required = True, 
-                    help ='Organelle to parse in the Feature table - Source')
 parser.add_argument('-l', '--locus', type = str, required = True, 
                     help ='The Locus name to view in the header')
 parser.add_argument('-b', '--bioproject', type = str, required = True, 
@@ -34,10 +32,6 @@ parser.add_argument('-t', '--taxonomy', type = str, required = True,
                     help ='The Taxonomy name of the specie')
 parser.add_argument('-oh', '--organism_header', type = str, required = True, 
                     help ='The organism name to view in the Header')
-parser.add_argument('-mt', '--mol_type', type = str, required = True, 
-                    help ='Molecular type .e.g DNA')
-parser.add_argument('-top', '--topology', type = str, required = True, 
-                    help ='Topology name: circular or linear')
 args = parser.parse_args()
 
 ############################# FUNCTIONS #############################
@@ -59,7 +53,7 @@ def source_feat(feat_list, seq_rec):
         feat_source = SeqFeature(FeatureLocation(0, len(sequence_str), strand = 1), 
                                         type = 'source', 
                                         qualifiers= {'organism': args.organism, # "Clupea harengus"
-                                                        'organelle': args.organelle, # "mitochondrion"
+                                                        'organelle': 'mitochondrion', # "mitochondrion"
                                                         'mol_type': 'genomic DNA'
                                                         })
         feat_list.append(feat_source)
@@ -80,7 +74,8 @@ def gene_feat(feat_list, gff_folder, Sequence_str, index):
                         
                 file_path =  gff_folder + f"/{index}/result.gff"
                     
-
+        topology = ''
+        
         # Reading in the GFF file -- > Getting the Features
         with open(file_path, "r") as gff_file_read:
                 # Create a list of each GFF line from the file
@@ -93,6 +88,13 @@ def gene_feat(feat_list, gff_folder, Sequence_str, index):
                         # Each line is in a seperate list
                         # [0] = SeqName, [1] = Source, [2] = Feature, [3] = Start, [4] = End, [5] = Score, [6] = Strand, [7] = Frame, [8] = Attribute
                         # print(splitted_gff_feat)
+                        
+                        if re.search('circular', splitted_gff_feat[0]):
+                                topology = 'circular'
+                        else:
+                                topology = 'linear'
+                        
+                        
                         if re.search("^gene", splitted_gff_feat[2]) or\
                         re.search("tRNA", splitted_gff_feat[2]) or \
                         re.search("rRNA", splitted_gff_feat[2]) or \
@@ -153,7 +155,7 @@ def gene_feat(feat_list, gff_folder, Sequence_str, index):
                 
                 
                 
-                return feat_list
+                return feat_list, topology
 
 ############################# MAIN SCRIPT #############################        
 
@@ -163,7 +165,7 @@ seq_id = [record.id for record in SeqIO.parse(args.fasta, "fasta")]
 index = 0
 
 # Iterate over the records in the FASTA file
-# Direclty calling the SeqIO.parse in the iterator to make it work
+# Directly calling the SeqIO.parse in the iterator to make it work
 for record in SeqIO.parse(args.fasta, "fasta"):      
         
         # Fasta file has only One sequence
@@ -172,9 +174,11 @@ for record in SeqIO.parse(args.fasta, "fasta"):
                 # Need to create a list for the Source features to read in 
                 Features = []
 
+                
                 Features, Sequence_str = source_feat(Features, record.seq)
-
-                Features = gene_feat(Features, args.gff, Sequence_str, index)
+                
+                # Returns a feature list and Topology
+                Features, topology = gene_feat(Features, args.gff, Sequence_str, index)
                         
                 # Parsing all information to a GenBank file
                 # Header Genbank information  
@@ -187,8 +191,8 @@ for record in SeqIO.parse(args.fasta, "fasta"):
                 header = {'source': sample_type, 
                         'organism': args.organism_header, #'Clupea harengus (Atlantic herring)', 
                         'Taxonomy': taxonomy, 
-                        'molecule_type': args.mol_type, # 'DNA' 
-                        'topology': args.topology, # 'circular'
+                        'molecule_type': 'DNA', # 'DNA' 
+                        'topology': topology, # 'circular'
                         'date': date_create()}  
 
                 # The Introduction to the GenBank file
@@ -206,7 +210,7 @@ for record in SeqIO.parse(args.fasta, "fasta"):
 
                 Features, Sequence_str = source_feat(Features, record.seq)
 
-                Features = gene_feat(Features, args.gff, Sequence_str, index)
+                Features, topology = gene_feat(Features, args.gff, Sequence_str, index)
                         
                 # Parsing all information to a GenBank file
                 # Header Genbank information  
@@ -219,8 +223,8 @@ for record in SeqIO.parse(args.fasta, "fasta"):
                 header = {'source': sample_type, 
                         'organism': args.organism_header, #'Clupea harengus (Atlantic herring)', 
                         'Taxonomy': taxonomy, 
-                        'molecule_type': args.mol_type, # 'DNA' 
-                        'topology': 'linear', 
+                        'molecule_type': 'DNA', # 'DNA' 
+                        'topology': topology, 
                         'date': date_create()}  
 
                 # The Introduction to the GenBank file

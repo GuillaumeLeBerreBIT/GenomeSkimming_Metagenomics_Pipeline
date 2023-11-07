@@ -142,8 +142,8 @@ rule BrackenBuild:
     threads: 16
 
     shell:
-    """
-    bracken-build -d {params.KrakenPathDB}/{params.DBname} -t 16
-    """
+        """
+        bracken-build -d {params.KrakenPathDB}/{params.DBname} -t 16
+        """
     
 

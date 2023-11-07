@@ -12,6 +12,32 @@
 import os
 
 ############################# RULES #############################
+
+# Add the Taxonomic Identifier to the headers of the reads from the GenomeSkim
+rule Extract_Kraken2_Reads:
+    input:
+        OutputReads = expand(
+            os.path.join(DATA_DIR_GS, "{PROJECT}/12_Contaminant_Kraken2/{SAMPLE}/ClassifiedContamination.kraken"),
+            PROJECT = config["genome_skimming"]["project"], SAMPLE = config["genome_skimming"]["sample"]
+            ),
+        AllReads = expand(
+            os.path.join(DATA_DIR_GS, "{PROJECT}/03_Fastq_join_Results/{SAMPLE}/{SAMPLE}_All_Reads_Concat.fastq"),
+            PROJECT = config["genome_skimming"]["project"], SAMPLE = config["genome_skimming"]["sample"]
+            )
+    output:
+        expand(
+            os.path.join(DATA_DIR_GS, "{PROJECT}/13_Extract_Kraken2_Reads/{SAMPLE}/{SAMPLE}_Unclassified.fasta"),
+            PROJECT = config["genome_skimming"]["project"], SAMPLE = config["genome_skimming"]["sample"]
+            )
+
+    conda:
+        "../envs/biopython.yaml"
+
+    shell:
+        """
+        python3 scripts/extract_kraken_reads.py -k {input.OutputReads} -s {input.AllReads} -t 0 -o {output}
+        """
+
 # Add the Taxonomic Identifier to the headers of the reads from the GenomeSkim
 rule AddTaxonomicID:
     input:
