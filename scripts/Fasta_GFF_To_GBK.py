@@ -87,8 +87,7 @@ def gene_feat(feat_list, gff_folder, Sequence_str, index):
                         
                         # Each line is in a seperate list
                         # [0] = SeqName, [1] = Source, [2] = Feature, [3] = Start, [4] = End, [5] = Score, [6] = Strand, [7] = Frame, [8] = Attribute
-                        # print(splitted_gff_feat)
-                        
+                        # Check if the header line either contains circular or not (can iterate over the lines since they either all or none have circular in the name)
                         if re.search('circular', splitted_gff_feat[0]):
                                 topology = 'circular'
                         else:
@@ -138,23 +137,7 @@ def gene_feat(feat_list, gff_folder, Sequence_str, index):
                                                 type = splitted_gff_feat[2], 
                                                 qualifiers= {'gene':splitted_gene_name[1], 
                                                                 'sequence': Sequence_str[start:end]
-                                                                }))
-                                        
-                                        # Not sure of this is biologically correct
-                                        #if re.search("^gene", splitted_gff_feat[2]):
-                                        #        
-                                        #        if strand == +1:
-                                        #                sequenced_spliced = Seq(sequence_str[start - 1:end])
-                                        #        else: sequenced_spliced = Seq(sequence_str[start - 1:end]).reverse_complement()
-                                        #        
-                                        #        Features.append(SeqFeature(FeatureLocation(start, end, strand = strand), 
-                                        #                type = 'CDS', 
-                                        #                qualifiers= {'gene':splitted_gene_name[1], 
-                                        #                                'translation': sequenced_spliced.translate(table = 2)
-                                        #                                }))
-                
-                
-                
+                                                                }))            
                 return feat_list, topology
 
 ############################# MAIN SCRIPT #############################        
@@ -174,7 +157,7 @@ for record in SeqIO.parse(args.fasta, "fasta"):
                 # Need to create a list for the Source features to read in 
                 Features = []
 
-                
+                # Get the source feature and whole FASTA sequence
                 Features, Sequence_str = source_feat(Features, record.seq)
                 
                 # Returns a feature list and Topology
@@ -207,9 +190,11 @@ for record in SeqIO.parse(args.fasta, "fasta"):
         else:
                 # Need to create a list of features
                 Features = []
-
+                
+                # Get the source feature and whole FASTA sequence         
                 Features, Sequence_str = source_feat(Features, record.seq)
-
+                
+                # Returns a feature list and Topology
                 Features, topology = gene_feat(Features, args.gff, Sequence_str, index)
                         
                 # Parsing all information to a GenBank file

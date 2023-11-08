@@ -24,11 +24,13 @@ args = parser.parse_args()
 # Want to use the SAMPLE name to locate the mapping files
 # Folder locationsnalways the same -- > 04_GetOrganelle_Mito_Results & 05_GetOrganelle_Ribo_Results
 def find_fasta(fasta_folder):
+    # Iterate over the FASTA files in a folder 
     for file in os.listdir(fasta_folder):
         
+        # Split on the filename extension
         file_ext = os.path.splitext(file)   # This will return [filename, ext]
         
-        # only checck for the files that have fasta es axtension
+        # only check for the files that have fasta as axtension
         if file_ext[1] == ".fasta":
             
             # Using the break if the wanted file is present will stop the loop and save that as filename
@@ -36,7 +38,7 @@ def find_fasta(fasta_folder):
                 file_to_read = file
                 break
             
-            # If scaffolds file is presenet will look further, if nothing else found will use that file
+            # When a scaffolds file is found will look further for complete file, if nothing else found will use that file
             if re.search('scaffolds.graph1.1', file):
                 file_to_read = file
                 
@@ -45,22 +47,22 @@ def find_fasta(fasta_folder):
 
 
 def records_to_save(fasta_file, sequence_name, saved_records):
-        # MITO
+    # Save all the records of a FASTA/ Multi FASTA file
     records_count = [record.id for record in SeqIO.parse(fasta_file, "fasta")]
-    # If there are multiple contigs to be produced can 
     
+    # If only one sequence present 
     if len(records_count) == 1:
     
         for record in SeqIO.parse(fasta_file, 'fasta'):
-         
+            # set the sequence name to the sample name >> Have ashortened name
             record.description, record.id, record.name = sequence_name, sequence_name, sequence_name
-
+            # Save all the records
             saved_records.append(record)
     
     else:
-    
+        # If multi FASTA iterate over the records and use enumerate to number the contigs
         for i, record in enumerate(SeqIO.parse(fasta_file, 'fasta')):
-
+            # Set a shortened accurate name as seqeunce header
             record.description, record.id, record.name = sequence_name + f'_Contig_{i}', sequence_name + f'_Contig_{i}', sequence_name + f'_Contig_{i}'
                 
             saved_records.append(record)
