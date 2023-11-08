@@ -63,23 +63,33 @@ def source_feat(feat_list, seq_rec):
                 
                 # Return a list that has the source Feature & A variable containing the FASTA Sequence 
         return feat_list, sequence_str
-
+    
+def feat(gene_dict, feat_list):
+    # To check if the strand is pos or negative
+    for gene in gene_dict.keys():
+        
+        feat_list.append(SeqFeature(FeatureLocation(gene_dict[gene]["StartP"], gene_dict[gene]["EndP"], strand = gene_dict[gene]["Strand"]), 
+                type = "rRNA", 
+                qualifiers= {'gene': gene, 
+                                'sequence': gene_dict[gene]["Seq"]
+                                }))
+    return feat_list
+        
 
 ############################# MAIN SCRIPT ############################# 
-
+# Dictionary to store the information of the rDNA genes in
 gene_dict = {}
 
-# The Seq regions from different Subunits   
-# "/home/genomics/gleberre/01_Research_BAR_ZAND/02_ZAND/01_ZAND_GS/07_ITSx_Anno_Results/MB_GS_M_johnstoni_S34/MB_GS_M_johnstoni_S34_Concat_All_Regions_ITSx.fasta"
+# Will iterate over the FASTA file that contains all the records found by ITSX and split >> SSU, ITS1, 5.8S, ITS2, LSU
 for record in SeqIO.parse(args.fasta_itsx, "fasta"): 
-    
+    # Split the header line on spaces 
     descr_line = record.description.split()
-    #print(descr_line)
     
+    # Split the START-END positions of ITS regions
     if re.search('ITS1', record.description): its_one_pos = descr_line[-3].split('-')
     if re.search('ITS2', record.description): its_two_pos = descr_line[-3].split('-')
     
-    # Creating a Nested dictionary
+    # Creating a Nested dictionary using the Gene name from the header line
     gene_dict[descr_line[2]] = {}
     # Assign the Seq, Start and End position of each gene
     gene_dict[descr_line[2]]["StartP"] = 'StartP'
@@ -87,6 +97,7 @@ for record in SeqIO.parse(args.fasta_itsx, "fasta"):
     gene_dict[descr_line[2]]["Seq"] = record.seq
 
 # Check wether the variable for its_two_pos was set or not >> If not use the end position of ITS1 as start for ITS2 
+# If ITS1 was not found THEN using the Start position from ITS2 to set the SSU start and 5.8S end region. 
 try:
     its_two_pos
 except NameError:
@@ -94,7 +105,8 @@ except NameError:
 else:
     pass
 
-# Check wether the variable for its_two_pos was set or not >> If was not found use the other ITS2 as end for ITS1
+# Check wether the variable for its_two_pos was set or not >> If was not found use the ITS2 as end for ITS1
+# If ITS2 was not found THEN they key was not set thus using the end position from ITS1 as start for 5.8S as LSU start region
 try:
     its_one_pos
 except NameError:
@@ -123,8 +135,7 @@ if 'ITS2' in gene_dict:
 if 'LSU' in gene_dict:
     gene_dict["LSU"]["StartP"] = int(its_two_pos[1]) 
     
-# Read in the GFF file for the position
-# "/home/genomics/gleberre/01_Research_BAR_ZAND/02_ZAND/01_ZAND_GS/08_Barrnap_Anno_Results/MB_GS_M_johnstoni_S34/MB_GS_M_johnstoni_S34_rDNA.gff"
+# Read in the GFF file
 with open(args.gff, "r") as gff_file_to_read:
     gff_lines = gff_file_to_read.readlines()
     
@@ -132,25 +143,29 @@ with open(args.gff, "r") as gff_file_to_read:
         
         splitted_feat = feat.strip().split("\t")
         
+        # Check if there is circular in the name (can iterate over it does not matter since either if it is circular will always have it in the name)
         if re.search('circular', splitted_feat[0]):
                 topology = 'circular'
         else:
                 topology = 'linear'
         
+        # Set the start position for SSU, Splice the sequence and overwrite it, set the strand. 
         if re.search("SSU", feat): 
+            # Have to decrement the exact postion minus one, to get the correct position in the Genbank file
             gene_dict["SSU"]["StartP"] = int(splitted_feat[3]) - 1
-            gene_dict["SSU"]["Seq"] = gene_dict["SSU"]["Seq"][int(splitted_feat[3]) - 1:]
+            gene_dict["SSU"]["Seq"] = gene_dict["SSU"]["Seq"][int(splitted_feat[3]) - 1:]   # Because start position 0, decrement it minus 1
             gene_dict["SSU"]["Strand"] = determ_strand(splitted_feat[6])
-        
+            
+        # Set the start position for LSU, Splice the sequence and overwrite it, set the strand.
         if re.search("LSU", feat): 
-            gene_dict["LSU"]["EndP"] = int(its_two_pos[1]) + 1 + int(splitted_feat[4])
+            gene_dict["LSU"]["EndP"] = int(its_two_pos[1]) + 1 + int(splitted_feat[4])  #Count the end position of ITS2 with the End pos if LSU and one for the index to get the correct end positions
             gene_dict["LSU"]["Seq"] = gene_dict["LSU"]["Seq"][:int(splitted_feat[4])]
             gene_dict["LSU"]["Strand"] = determ_strand(splitted_feat[6])
 
         if re.search("5.8S", feat): 
             gene_dict["5.8S"]["Strand"] = determ_strand(splitted_feat[6])
             
-    
+    # Set the strand equal to its neighbouring gene region
     if 'ITS2' in gene_dict: gene_dict["ITS2"]["Strand"] = gene_dict["LSU"]["Strand"]
     if 'ITS1' in gene_dict: gene_dict["ITS1"]["Strand"] = gene_dict["SSU"]["Strand"]
        
@@ -168,17 +183,11 @@ for record in SeqIO.parse(args.fasta_go, "fasta"):
                 
                 # Need to create a list for the Source features to read in 
                 Features = []
-
+                # Get the source feature
                 Features, Sequence_str = source_feat(Features, record.seq)
-                
-                # To check if the strand is pos or negative
-                for gene in gene_dict.keys():
-                    
-                    Features.append(SeqFeature(FeatureLocation(gene_dict[gene]["StartP"], gene_dict[gene]["EndP"], strand = gene_dict[gene]["Strand"]), 
-                            type = "rRNA", 
-                            qualifiers= {'gene': gene, 
-                                            'sequence': gene_dict[gene]["Seq"]
-                                            }))
+                # Get the rDNA features 
+                Features = feat(gene_dict)
+
                         
                 # Parsing all information to a GenBank file
                 # Header Genbank information  
@@ -206,8 +215,10 @@ for record in SeqIO.parse(args.fasta_go, "fasta"):
         else:
                 # Need to create a list of features
                 Features = []
-
+                # Get the source feature
                 Features, Sequence_str = source_feat(Features, record.seq)
+                # Get the rDNA features
+                Features = feat(gene_dict)
                         
                 # Parsing all information to a GenBank file
                 # Header Genbank information  
