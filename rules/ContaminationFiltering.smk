@@ -28,7 +28,7 @@ rule ContaminationFiltering:
         "../envs/kraken2.yaml"
 
     params:
-        dbk2 = config["genome_skimming"]["KrakenStand"],
+        dbk2 = config["genome_skimming"]["KrakenCont"],
         smp_report = expand(
             os.path.join(DATA_DIR_GS, "{PROJECT}/12_Contaminant_Kraken2/{SAMPLE}/ReportContamination.txt"),
             PROJECT = config["genome_skimming"]["project"], SAMPLE = config["genome_skimming"]["sample"]

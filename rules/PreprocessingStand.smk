@@ -16,12 +16,16 @@ import os
 rule Trimmomatic:
     input:
         FOR = expand(
-            os.path.join(DATA_DIR_MG, "{SEQ_DIR}/{SAMPLE}_R1_001.fastq.gz"),
-            SEQ_DIR = config["metagenomics"]["seqdata"], SAMPLE = config["metagenomics"]["sample"]
+            os.path.join(DATA_DIR_MG, "{SEQ_DIR}/{SAMPLE}{R1}"),
+            SEQ_DIR = config["metagenomics"]["seqdata"], 
+            SAMPLE = config["metagenomics"]["sample"],
+            R1 = config["metagenomics"]["suffix_r1"]
             ),
         REV = expand(
-            os.path.join(DATA_DIR_MG, "{SEQ_DIR}/{SAMPLE}_R2_001.fastq.gz"), 
-            SEQ_DIR = config["metagenomics"]["seqdata"], SAMPLE = config["metagenomics"]["sample"]
+            os.path.join(DATA_DIR_MG, "{SEQ_DIR}/{SAMPLE}{R2}"), 
+            SEQ_DIR = config["metagenomics"]["seqdata"], 
+            SAMPLE = config["metagenomics"]["sample"],
+            R2 = config["metagenomics"]["suffix_r2"]
             )
     output:
         PAIRED_1 = expand(
