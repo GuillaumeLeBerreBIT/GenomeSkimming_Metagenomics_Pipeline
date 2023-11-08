@@ -29,7 +29,7 @@ DK_DIR = config["genome_skimming"]["dockerdir"]
 # the contamination filtering as well the output file names of Kraken  classification
 TAXID = config['genome_skimming']['taxid']
 # Path to the KRAKEN2 standard database used for contamination filtering
-KRAKEN_STAND = config["metagenomics"]["KrakenStand"]
+KRAKEN_STAND = config["metagenomics"]["KrakenCont"]
 
 ############################# WORKFLOWS #############################
 if config["pipeline"] == "Genome_Skimming":

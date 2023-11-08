@@ -40,7 +40,7 @@ rule ContaminationFiltering:
             )
         
     params:
-        dbk2 = config["metagenomics"]["KrakenStand"]
+        dbk2 = config["metagenomics"]["KrakenCont"]
         smp_report = expand(
             os.path.join(DATA_DIR_MG, "{PROJECT}/03_KrakenContaminant/{SAMPLE}SimpleReport.txt"),
             PROJECT = config["metagenomics"]["project"], SAMPLE = config["metagenomics"]["sample"]
