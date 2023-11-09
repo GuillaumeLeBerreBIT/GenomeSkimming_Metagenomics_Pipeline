@@ -64,7 +64,7 @@ def source_feat(feat_list, seq_rec):
                 # Return a list that has the source Feature & A variable containing the FASTA Sequence 
         return feat_list, sequence_str
     
-def feat(gene_dict, feat_list):
+def features(gene_dict, feat_list):
     # To check if the strand is pos or negative
     for gene in gene_dict.keys():
         
@@ -186,7 +186,7 @@ for record in SeqIO.parse(args.fasta_go, "fasta"):
                 # Get the source feature
                 Features, Sequence_str = source_feat(Features, record.seq)
                 # Get the rDNA features 
-                Features = feat(gene_dict)
+                Features = features(gene_dict, Features)
 
                         
                 # Parsing all information to a GenBank file
@@ -218,7 +218,7 @@ for record in SeqIO.parse(args.fasta_go, "fasta"):
                 # Get the source feature
                 Features, Sequence_str = source_feat(Features, record.seq)
                 # Get the rDNA features
-                Features = feat(gene_dict)
+                Features = feat(gene_dict, Features)
                         
                 # Parsing all information to a GenBank file
                 # Header Genbank information  

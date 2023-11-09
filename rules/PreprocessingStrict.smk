@@ -16,13 +16,13 @@ import os
 rule Trimmomatic:
     input:
         FOR = expand(
-            os.path.join(DATA_DIR_MG, "{SEQ_DIR}/{SAMPLE}{R1}"),
+            os.path.join(DATA_DIR_GS, "{SEQ_DIR}/{SAMPLE}{R1}"),
             SEQ_DIR = config["genome_skimming"]["seqdata"], 
             SAMPLE = config["genome_skimming"]["sample"],
             R1 = config["genome_skimming"]["suffix_r1"]
             ),
         REV = expand(
-            os.path.join(DATA_DIR_MG, "{SEQ_DIR}/{SAMPLE}{R2}"), 
+            os.path.join(DATA_DIR_GS, "{SEQ_DIR}/{SAMPLE}{R2}"), 
             SEQ_DIR = config["genome_skimming"]["seqdata"], 
             SAMPLE = config["genome_skimming"]["sample"],
             R2 = config["genome_skimming"]["suffix_r2"]
