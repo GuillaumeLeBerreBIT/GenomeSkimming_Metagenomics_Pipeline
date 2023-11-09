@@ -114,7 +114,7 @@ rule BuildKrakenDB:
     # kraken2-build --threads 16 --clean --db {params.KrakenPathDB}/{params.DBname}
     shell:
         """
-        kraken2-build --threads 16 --build --db {params.KrakenPathDB}/{params.DBname}
+        kraken2-build --threads 8 --build --db {params.KrakenPathDB}/{params.DBname}
         """
 
 # After building the KRAKEN database can directly build the BRACKEN database since the 'database100mers.kmer_distrib' is needed to do BRACKEN
@@ -139,7 +139,7 @@ rule BrackenBuild:
                         ),
         DBname = config['genome_skimming']['KrakenDB']
     
-    threads: 16
+    threads: 8
 
     shell:
         """

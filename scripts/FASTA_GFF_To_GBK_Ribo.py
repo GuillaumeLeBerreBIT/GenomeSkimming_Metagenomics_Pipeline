@@ -218,7 +218,7 @@ for record in SeqIO.parse(args.fasta_go, "fasta"):
                 # Get the source feature
                 Features, Sequence_str = source_feat(Features, record.seq)
                 # Get the rDNA features
-                Features = feat(gene_dict, Features)
+                Features = features(gene_dict, Features)
                         
                 # Parsing all information to a GenBank file
                 # Header Genbank information  
