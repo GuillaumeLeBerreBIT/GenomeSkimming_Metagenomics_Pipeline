@@ -185,8 +185,8 @@ elif config["pipeline"] == "Metagenomics":
                         os.path.join(DATA_DIR_MG, "{PROJECT}/05_BRACKEN_Results/{SAMPLE}_Bracken_Classified.bracken")
                         
                     ],
-                    PROJECT = config["genome_skimming"]["project"],
-                    SAMPLE = config["genome_skimming"]["sample"]                
+                    PROJECT = config["metagenomics"]["project"],
+                    SAMPLE = config["metagenomics"]["sample"]                
                 )
     
     # This performs the mapping of reads against a self-created custom reference mitochondrial genome and ribosomal repeat, 
@@ -205,8 +205,8 @@ elif config["pipeline"] == "Metagenomics":
                         os.path.join(DATA_DIR_MG, "{PROJECT}/09_Gamma_Delta_Results/{SAMPLE}_Gamma_Delta.csv")
                         
                     ],
-                    PROJECT = config["genome_skimming"]["project"],
-                    SAMPLE = config["genome_skimming"]["sample"]                
+                    PROJECT = config["metagenomics"]["project"],
+                    SAMPLE = config["metagenomics"]["sample"]                
                 )
 
     # This performs the k-mer matching of reads against a custom created KRAKEN Genome Skimming database. Combined with 
@@ -226,8 +226,8 @@ elif config["pipeline"] == "Metagenomics":
                         os.path.join(DATA_DIR_MG, "{PROJECT}/05_BRACKEN_Results/{SAMPLE}_Bracken_Classified.bracken")
                         
                     ],
-                    PROJECT = config["genome_skimming"]["project"],
-                    SAMPLE = config["genome_skimming"]["sample"]                
+                    PROJECT = config["metagenomics"]["project"],
+                    SAMPLE = config["metagenomics"]["sample"]                
                 )
 
 else:
