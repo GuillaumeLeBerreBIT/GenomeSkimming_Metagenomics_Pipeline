@@ -240,7 +240,7 @@ def write_reads_file(AssignedReads):
                     # If the record is in the list then >> Save the reads to a FASTQ file
                     if record.id in AssignedReads['R1'].keys():
                         
-                        # Remove the ID from the description to not have long duplicate headers. 
+                        # Remove the ID from the description to not have long headers with repeated records & strip whitespaces. 
                         record.description = record.description.replace(record.id, "").strip()
                         # Add the Reference name of the species it Mapped best against
                         record.id = record.id + '_' + AssignedReads['R1'][record.id]
