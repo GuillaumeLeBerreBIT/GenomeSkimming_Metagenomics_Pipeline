@@ -25,6 +25,7 @@ from os.path import isfile, join
 import operator
 from decimal import Decimal
 import datetime
+from Bio import SeqIO
 
 ## ARGUMENTS DEFINITION
 parser = argparse.ArgumentParser(prog='ARGUMENTS', usage='%(prog)s [options]')
@@ -36,6 +37,8 @@ parser.add_argument("-g",   "--gamma",          type=str,   help="Gamma threshol
 parser.add_argument("-d",   "--delta",          type=str,   help="Delta threshold (per one unit) [1-0]")
 parser.add_argument("-o",   "--output",         type=str,   help="Name of the output file (CSV format)")
 parser.add_argument("-O",   "--outInfo",        type=str,   help="Output the assignment of each read (CSV format)")
+parser.add_argument("-F",   "--FastqOutput",        type=str,   help="Write each read to its respective FASTQ file, Forward (R1) and Reversed (R2) if SE only to R. \
+                                                                    Only provide the prefix of the filename.")
 args = parser.parse_args()
 
 ## ABREVIATIONS
@@ -190,21 +193,77 @@ def summary_dict(ReadDict):
     SumDic["A1-below-gamma"] = 0
     SumDic["A2-above-delta"] = 0
 
+    AssignedReads = {'R1': [], 'R2': []}
+    
     for ReadId in ReadDict:
         ## Check if the read has been assigned -- > Incrementing the count of the mapped reads for Reference genome
         if ReadDict[ReadId][9] == "Assigned": 
+            # If it is a forward read save it to R1 list
+            if ReadId[-1] == '1':
+                AssignedReads["R1"].append(ReadId[:-2])
+            
+            # If it is a reverse read save it to R2 list
+            elif ReadId[-1] == '2':
+                AssignedReads["R2"].append(ReadId[:-2])
+                
+            
             if ReadDict[ReadId][1] in SumDic: # Reference already exists
                 SumDic[ReadDict[ReadId][1]] += 1
             else: # Reference doesn't exist yet
                 newkey = ReadDict[ReadId][1]
                 SumDic[newkey] = 1
+                
         ## If the read has not been assigned, save the reason -- > Unassigned reads, saving the reason why
         elif ReadDict[ReadId][9] == "A1-below-gamma":
             SumDic["A1-below-gamma"] += 1
         elif ReadDict[ReadId][9] == "A2-above-delta":
             SumDic["A2-above-delta"] += 1
-    return SumDic
+    return SumDic, AssignedReads
 
+# Write the assigned reads to a new file
+def write_reads_file(AssignedReads):
+    
+    # Want to rewrite all the reads from R1 or R2 to a new file
+    # Reread FASTQ IF read in dictionary -- > Write read to new file
+    if args.FastqOutput is not None:
+        # Check whether PE files were given
+        if args.R1 is not None and \
+        args.R2 is not None: 
+            # Split the extension from the input files >> To know which format to output the reads
+            r1_ext = os.path.splitext(args.R1)
+            r2_ext = os.path.splitext(args.R2)
+            # Open the FASTQ files to write the reads to >> Format on inputted suffix and input extension files
+            with open(f"{args.FastqOutput}_R1_Paired{r1_ext[1]}", "w") as file_r1, \
+                 open(f"{args.FastqOutput}_R2_Paired{r2_ext[1]}", "w") as file_r2:
+                # Only have unique reads in each list (which should normally be the case)
+                assigned_reads_r1 = set(AssignedReads['R1'])
+                assigned_reads_r2 = set(AssignedReads['R2'])
+                # Iterate over the records of the input FASTQ file >> Extension based on the input files
+                for record in SeqIO.parse(args.R1, r1_ext[1][1:]):
+                    # If the record is in the list then >> Save the reads to a FASTQ file
+                    if record.id in assigned_reads_r1:
+                        SeqIO.write(record, file_r1, format = r1_ext[1][1:])
+                # Same principal iterating over the FASTQ files to save each record to a new file  
+                for record in SeqIO.parse(args.R2, r2_ext[1][1:]):
+                    
+                    if record.id in assigned_reads_r2:
+                        SeqIO.write(record, file_r2, format = r2_ext[1][1:])
+
+        # If it is SE only have R1 reads
+        elif args.R is not None: 
+            # Split the extension from the input files >> To know which format to output the reads
+            r_ext = os.path.splitext(args.R)
+            
+            with open(f"{args.FastqOutput}_R{r_ext[1]}", "w") as file_r:
+                # Only have unique reads
+                assigned_reads_r = set(AssignedReads['R1'])
+                # Saving all the reads that are present in the Assigned Reads list
+                for record in SeqIO.parse(args.R1, r_ext[1][1:]):
+                    
+                    if record.id in assigned_reads_r:
+                        SeqIO.write(record, file_r, format = r_ext[1][1:])
+            
+        
 # Pop value "valueKey" from dictionary
 def popValue(valueKey, ReadDict):
     try:
@@ -353,8 +412,11 @@ def main():
     
     print("Summarizing data...")
     os.chdir(wd) # Turn back to the original working directory
-    summary = summary_dict(ReadDict)
+    summary, AssignedReads = summary_dict(ReadDict)
     save_map_info_csv(summary)
+    
+    # Save the assigned reads to an file
+    write_reads_file(AssignedReads)
 
     ## Save each read assingment information
     if (args.outInfo is not None):
