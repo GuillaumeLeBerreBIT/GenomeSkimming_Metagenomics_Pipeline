@@ -205,7 +205,6 @@ def summary_dict(ReadDict):
             # If it is a reverse read save it to R2 list
             elif ReadId[-1] == '2':
                 AssignedReads["R2"].append(ReadId[:-2])
-                
             
             if ReadDict[ReadId][1] in SumDic: # Reference already exists
                 SumDic[ReadDict[ReadId][1]] += 1

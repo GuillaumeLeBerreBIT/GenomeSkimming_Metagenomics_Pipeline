@@ -2,6 +2,7 @@ from Bio import SeqIO
 from Bio.Seq import Seq
 from Bio.SeqFeature import SeqFeature
 from Bio.SeqRecord import SeqRecord
+#gb_file = open("test.gb", "r")
 
 gb_file = open("test.gb", "r")
 
