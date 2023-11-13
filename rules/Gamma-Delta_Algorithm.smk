@@ -19,7 +19,7 @@ rule GammaDelta:
             )
     output:
         summary = expand(
-            os.path.join(DATA_DIR_MG, "{PROJECT}/09_Gamma_Delta_Results/{SAMPLE}_Gamma_Delta_Summary.csv"),
+            os.path.join(DATA_DIR_MG, "{PROJECT}/09_Gamma_Delta_Results/{SAMPLE}/{SAMPLE}_Gamma_Delta_Summary.csv"),
             PROJECT = config["metagenomics"]["project"], SAMPLE = config["metagenomics"]["sample"]
             )
 
@@ -40,11 +40,11 @@ rule GammaDelta:
             PROJECT = config["metagenomics"]["project"], SAMPLE = config["metagenomics"]["sample"]
             ),
         assignment = expand(
-            os.path.join(DATA_DIR_MG, "{PROJECT}/09_Gamma_Delta_Results/{SAMPLE}_Gamma_Delta_Reads_Assignment.csv"),
+            os.path.join(DATA_DIR_MG, "{PROJECT}/09_Gamma_Delta_Results/{SAMPLE}/{SAMPLE}_Gamma_Delta_Reads_Assignment.csv"),
             PROJECT = config["metagenomics"]["project"], SAMPLE = config["metagenomics"]["sample"]
             ),
         reads = expand(
-            os.path.join(DATA_DIR_MG, "{PROJECT}/09_Gamma_Delta_Results/{SAMPLE}"),
+            os.path.join(DATA_DIR_MG, "{PROJECT}/09_Gamma_Delta_Results/{SAMPLE}/{SAMPLE}"),
             PROJECT = config["metagenomics"]["project"], SAMPLE = config["metagenomics"]["sample"]
             )
         

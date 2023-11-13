@@ -193,18 +193,18 @@ def summary_dict(ReadDict):
     SumDic["A1-below-gamma"] = 0
     SumDic["A2-above-delta"] = 0
 
-    AssignedReads = {'R1': [], 'R2': []}
+    AssignedReads = {'R1': {}, 'R2': {}}
     
     for ReadId in ReadDict:
         ## Check if the read has been assigned -- > Incrementing the count of the mapped reads for Reference genome
         if ReadDict[ReadId][9] == "Assigned": 
             # If it is a forward read save it to R1 list
             if ReadId[-1] == '1':
-                AssignedReads["R1"].append(ReadId[:-2])
+                AssignedReads["R1"][ReadId[:-2]] = ReadDict[ReadId][2]
             
             # If it is a reverse read save it to R2 list
             elif ReadId[-1] == '2':
-                AssignedReads["R2"].append(ReadId[:-2])
+                AssignedReads["R2"][ReadId[:-2]] = ReadDict[ReadId][2]
             
             if ReadDict[ReadId][1] in SumDic: # Reference already exists
                 SumDic[ReadDict[ReadId][1]] += 1
@@ -234,18 +234,31 @@ def write_reads_file(AssignedReads):
             # Open the FASTQ files to write the reads to >> Format on inputted suffix and input extension files
             with open(f"{args.FastqOutput}_R1_Paired{r1_ext[1]}", "w") as file_r1, \
                  open(f"{args.FastqOutput}_R2_Paired{r2_ext[1]}", "w") as file_r2:
-                # Only have unique reads in each list (which should normally be the case)
-                assigned_reads_r1 = set(AssignedReads['R1'])
-                assigned_reads_r2 = set(AssignedReads['R2'])
+                     
                 # Iterate over the records of the input FASTQ file >> Extension based on the input files
                 for record in SeqIO.parse(args.R1, r1_ext[1][1:]):
                     # If the record is in the list then >> Save the reads to a FASTQ file
-                    if record.id in assigned_reads_r1:
+                    if record.id in AssignedReads['R1'].keys():
+                        
+                        # Remove the ID from the description to not have long duplicate headers. 
+                        record.description = record.description.replace(record.id, "").strip()
+                        # Add the Reference name of the species it Mapped best against
+                        record.id = record.id + '_' + AssignedReads['R1'][record.id]
+                        
+                        # Write the record to file, format is based on the input file extensions
                         SeqIO.write(record, file_r1, format = r1_ext[1][1:])
+                
                 # Same principal iterating over the FASTQ files to save each record to a new file  
                 for record in SeqIO.parse(args.R2, r2_ext[1][1:]):
                     
-                    if record.id in assigned_reads_r2:
+                    if record.id in AssignedReads['R2'].keys():
+                        
+                        # Remove the ID from the description to not have long duplicate headers.
+                        record.description = record.description.replace(record.id, "").strip()
+                        # Add the Reference name of the species it Mapped best against
+                        record.id = record.id + '_' + AssignedReads['R2'][record.id]
+                        
+                        # Write the record to file, format is based on the input file extensions
                         SeqIO.write(record, file_r2, format = r2_ext[1][1:])
 
         # If it is SE only have R1 reads
@@ -254,12 +267,16 @@ def write_reads_file(AssignedReads):
             r_ext = os.path.splitext(args.R)
             
             with open(f"{args.FastqOutput}_R{r_ext[1]}", "w") as file_r:
-                # Only have unique reads
-                assigned_reads_r = set(AssignedReads['R1'])
+                
                 # Saving all the reads that are present in the Assigned Reads list
                 for record in SeqIO.parse(args.R1, r_ext[1][1:]):
                     
-                    if record.id in assigned_reads_r:
+                    if record.id in AssignedReads['R1'].keys():
+                        
+                        # Remove the ID from the description to not have long duplicate headers. 
+                        record.description = record.description.replace(record.id, "").strip()
+                        record.id = record.id + '_' + AssignedReads['R1'][record.id]
+                        
                         SeqIO.write(record, file_r, format = r_ext[1][1:])
             
         
