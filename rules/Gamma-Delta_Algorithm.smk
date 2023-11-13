@@ -18,10 +18,13 @@ rule GammaDelta:
             PROJECT = config["metagenomics"]["project"], SAMPLE = config["metagenomics"]["sample"]
             )
     output:
-        expand(
-            os.path.join(DATA_DIR_MG, "{PROJECT}/09_Gamma_Delta_Results/{SAMPLE}_Gamma_Delta.csv"),
+        summary = expand(
+            os.path.join(DATA_DIR_MG, "{PROJECT}/09_Gamma_Delta_Results/{SAMPLE}_Gamma_Delta_Summary.csv"),
             PROJECT = config["metagenomics"]["project"], SAMPLE = config["metagenomics"]["sample"]
             )
+
+    conda:
+        "../envs/biopython.yaml"
 
     params:
         PAIRED_1 = expand(
@@ -35,9 +38,18 @@ rule GammaDelta:
         OutputFiltered = expand(
             os.path.join(DATA_DIR_MG, "{PROJECT}/08_Sam_Filtered/{SAMPLE}/"),
             PROJECT = config["metagenomics"]["project"], SAMPLE = config["metagenomics"]["sample"]
+            ),
+        assignment = expand(
+            os.path.join(DATA_DIR_MG, "{PROJECT}/09_Gamma_Delta_Results/{SAMPLE}_Gamma_Delta_Reads_Assignment.csv"),
+            PROJECT = config["metagenomics"]["project"], SAMPLE = config["metagenomics"]["sample"]
+            ),
+        reads = expand(
+            os.path.join(DATA_DIR_MG, "{PROJECT}/09_Gamma_Delta_Results/{SAMPLE}"),
+            PROJECT = config["metagenomics"]["project"], SAMPLE = config["metagenomics"]["sample"]
             )
         
     shell:
         """
-        python3 scripts/gamma-delta.py -g 0.99 -d 0.98 -m {params.OutputFiltered} -r1 {params.PAIRED_1} -r2 {params.PAIRED_2} -o {output}
+        python3 scripts/gamma-delta.py -g 0.99 -d 0.98 -m {params.OutputFiltered} -r1 {params.PAIRED_1} -r2 {params.PAIRED_2} \
+        -o {output.summary} -O {params.assignment} -F {params.reads}
         """
