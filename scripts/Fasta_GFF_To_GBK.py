@@ -112,6 +112,10 @@ def gene_feat(feat_list, gff_folder, Sequence_str, index):
                                 # Need to split the gene name on =
                                 splitted_gene_name = gene_name[0].split("=")
                                 
+                                # Need to change the Origin_Of_Replication name 
+                                if re.search("origin_of_replication", splitted_gff_feat[2]): gene_type = "OOR"
+                                else: gene_type = splitted_gff_feat[2]
+                                
                                 # When circular and the annotation loops through the end tot the start again
                                 if start > end:
                                         # To check if the strand is pos or negative
@@ -124,7 +128,7 @@ def gene_feat(feat_list, gff_folder, Sequence_str, index):
                                         FeatureLoc2 = FeatureLocation(0, end, strand = strand)
                                         # Parse the joined FeatureLocations to the Genbank file to CompoundLocation using a list. THis will combine them both
                                         feat_list.append(SeqFeature(CompoundLocation([FeatureLoc1, FeatureLoc2]), 
-                                                type = splitted_gff_feat[2], 
+                                                type = gene_type, 
                                                 qualifiers= {'gene':splitted_gene_name[1], 
                                                                 'sequence': seq_fromatted
                                                                 }))
@@ -134,7 +138,7 @@ def gene_feat(feat_list, gff_folder, Sequence_str, index):
                                         strand = determ_strand(splitted_gff_feat[6])
                                         
                                         feat_list.append(SeqFeature(FeatureLocation(start, end, strand = strand), 
-                                                type = splitted_gff_feat[2], 
+                                                type = gene_type, 
                                                 qualifiers= {'gene':splitted_gene_name[1], 
                                                                 'sequence': Sequence_str[start:end]
                                                                 }))            
