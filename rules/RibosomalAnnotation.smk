@@ -89,10 +89,6 @@ rule Barrnap:
         "../envs/barrnap.yaml"
 
     params:
-        FTA = expand(
-            os.path.join(DATA_DIR_GS, "{PROJECT}/05_GetOrganelle_Ribo_Results/{SAMPLE}/*1.1.*path_sequence.fasta"),
-            PROJECT = config['genome_skimming']['project'], SAMPLE = config['genome_skimming']['sample']
-            ),
         RiboSeq = expand(
             os.path.join(DATA_DIR_GS, "{PROJECT}/08_Barrnap_Anno_Results/{SAMPLE}/{SAMPLE}_rDNA.fasta"),
             PROJECT = config['genome_skimming']['project'], SAMPLE = config['genome_skimming']['sample']
