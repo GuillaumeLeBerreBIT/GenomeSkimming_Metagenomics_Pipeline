@@ -33,6 +33,7 @@ KRAKEN_STAND = config["metagenomics"]["KrakenCont"]
 
 ############################# WORKFLOWS #############################
 if config["pipeline"] == "Genome_Skimming":
+
     # This workflow will perfrom an Assembly of the Mitochondrial genome, Ribosomal and Nuclear free assembly. 
     if config["genome_skimming"]["workflow"] == "Assembly":
         include:
@@ -169,7 +170,7 @@ if config["pipeline"] == "Genome_Skimming":
                 
 ## METAGENOMICS
 elif config["pipeline"] == "Metagenomics":
-
+    
     # This performs the k-mer matching of reads against a custom created KRAKEN Genome Skimming database. 
     if config["metagenomics"]["workflow"] == "Kmer_Matching":
         include:
