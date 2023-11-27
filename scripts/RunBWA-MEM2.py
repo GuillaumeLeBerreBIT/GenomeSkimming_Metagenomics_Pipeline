@@ -1,3 +1,11 @@
+#!/usr/bin/python3
+############################# INTRODUCTION #############################
+# Author: Guillaume Le Berre
+# GitHub: https://github.com/GuillaumeLeBerreBIT
+#
+# Run the BWA-MEM of the FASTQ/FASTA file against all the reference organelles which are all placed in the same folder. 
+#
+############################# MODULES #############################
 import os, subprocess, argparse
 
 # Need to provide the [1]FolderReferenceFiles [2]PE_1 [3]PE_2 [4]SampleName

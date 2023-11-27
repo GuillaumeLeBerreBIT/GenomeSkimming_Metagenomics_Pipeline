@@ -1,5 +1,9 @@
 #!/usr/bin/python3
 ############################# INTRODUCTION #############################
+# Author: Guillaume Le Berre
+# GitHub: https://github.com/GuillaumeLeBerreBIT
+#
+# Using the FASTA file for annotation (ITSx) and sequence (GetOrganelle) togheter with the GFF file to create a Genbank format
 #
 ############################# MODULES #############################
 #

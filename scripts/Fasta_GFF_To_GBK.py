@@ -1,5 +1,9 @@
 #!/usr/bin/python3
 ############################# INTRODUCTION #############################
+# Author: Guillaume Le Berre
+# GitHub: https://github.com/GuillaumeLeBerreBIT
+#
+# Combine the information of the FASTA file and GFF file for the creation of Mitochondrion Genbank format
 #
 ############################# MODULES #############################
 #

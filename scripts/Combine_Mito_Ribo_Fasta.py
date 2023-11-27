@@ -1,6 +1,10 @@
 #!/usr/bin/python3
 ############################# INTRODUCTION #############################
+# Author: Guillaume Le Berre
+# GitHub: https://github.com/GuillaumeLeBerreBIT
 #
+# Combine the information of the FASTA and GFF file to create a Genbank file format
+# 
 ############################# MODULES #############################
 #
 # Importing necassary modules

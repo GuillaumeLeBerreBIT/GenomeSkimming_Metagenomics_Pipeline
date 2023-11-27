@@ -3,7 +3,6 @@
 # Author: Guillaume Le Berre
 # GitHub: https://github.com/GuillaumeLeBerreBIT
 # 
-# DIAMOND to Assemvly
 # 1) Will loop over the folders containing the blast results in csv format, tab seperated
 # 2) Gather the matches per gene
 # 3) Gather the seq in how many reads found  

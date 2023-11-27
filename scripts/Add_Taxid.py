@@ -1,6 +1,8 @@
 #!/usr/bin/python3
 ############################# INTRODUCTION #############################
 #
+# Script to add the Taxonomy ID at the start of the sequence header so Kraken can recognize the Taxonomy data
+#
 #################################### MODULES ####################################
 import argparse, re
 

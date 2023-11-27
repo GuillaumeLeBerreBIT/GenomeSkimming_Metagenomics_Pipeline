@@ -1,3 +1,11 @@
+#!/usr/bin/python3
+############################# INTRODUCTION #############################
+# Author: Guillaume Le Berre
+# GitHub: https://github.com/GuillaumeLeBerreBIT
+#
+# Run the Samtools command of the multiple SAM files after BWA-MEM. Read in folder and process all the SAM files
+#
+############################# MODULES #############################
 import os, subprocess, argparse
 
 

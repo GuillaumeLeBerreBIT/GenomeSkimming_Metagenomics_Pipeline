@@ -3,7 +3,8 @@
 # Author: Guillaume Le Berre
 # GitHub: https://github.com/GuillaumeLeBerreBIT
 # 
-
+# Multiple BLAST Hits concatenated in one fiel >> Want to colelct the unique sequences in a nes file
+#
 ############################# MODULES #############################
 import os, argparse
 from Bio import SeqIO

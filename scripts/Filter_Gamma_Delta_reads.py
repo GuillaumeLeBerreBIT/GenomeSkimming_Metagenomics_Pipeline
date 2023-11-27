@@ -1,5 +1,11 @@
 #!/usr/bin/python3
-
+############################# INTRODUCTION #############################
+# Author: Guillaume Le Berre
+# GitHub: https://github.com/GuillaumeLeBerreBIT
+#
+# To filter the Gamma-Delta reads based on the wanted sequence/Reference species & Organelle
+#
+############################# MODULES #############################
 import os, argparse, re
 from Bio import SeqIO
 
@@ -66,10 +72,6 @@ def main():
     
     
 main()                
-
-
-# "/home/genomics/gleberre/01_Research_BAR_ZAND/02_ZAND/02_ZAND_MG/09_Gamma_Delta_Results/MB_MG_ZVL_S42/MB_MG_ZVL_S42_R1_Paired.fastq"
-# "/home/genomics/gleberre/01_Research_BAR_ZAND/02_ZAND/02_ZAND_MG/09_Gamma_Delta_Results/MB_MG_ZVL_S42/MB_MG_ZVL_S42_R2_Paired.fastq"
 
 
 
