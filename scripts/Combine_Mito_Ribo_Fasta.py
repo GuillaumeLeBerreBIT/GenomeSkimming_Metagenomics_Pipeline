@@ -3,7 +3,7 @@
 # Author: Guillaume Le Berre
 # GitHub: https://github.com/GuillaumeLeBerreBIT
 #
-# Combine the information of the FASTA and GFF file to create a Genbank file format
+# Concatenate all the sequences together 
 # 
 ############################# MODULES #############################
 #
