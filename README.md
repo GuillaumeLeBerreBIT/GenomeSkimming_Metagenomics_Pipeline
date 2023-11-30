@@ -182,7 +182,9 @@ The `workflow` is what will define what analysis to you will run under the Metag
 
 Under `KrakenCustomDB` can define the path to the (Custom) Kraken database want to use to classify the metagenomic sequencing reads. 
 
-The `FolderReferenceFasta` is the path to the folder `17_Reference_Mapping_MG` containing all the Reference (multi)FASTA files which are used for mapping reads using BWA-MEM under the `Gamma-Delta` analysis.  
+The `FolderReferenceFasta` is the path to the folder `17_Reference_Mapping_MG` containing all the Reference (multi)FASTA files which are used for mapping reads using BWA-MEM under the `Gamma-Delta` analysis. 
+
+Can self determine which Gamma- and Delta-parameters want to use for the Gamma-Demta script. Gamma is to determine how good a read maps agaisnt one species. While Delta is used to determine how well it maps against all other species. A Read is then only classififed as "Assigned" if the score of a read is >= then Gamma and < Delta. The stricter, the fewer false positives are present.
 
 ```
 metagenomics:
@@ -205,7 +207,11 @@ metagenomics:
   KrakenCustomDB: "/home/genomics/gleberre/01_Research_BAR_ZAND/01_BAR/01_BAR_GS/15_Kraken_Databases/GenomeSkimDB"
 
   FolderReferenceFasta: "/home/genomics/gleberre/01_Research_BAR_ZAND/01_BAR/01_BAR_GS/17_Reference_Mapping_MG"
+
+  gamma: "0.99"
+  delta: "0.98"
 ```
+
 
 ### Commands 
 
