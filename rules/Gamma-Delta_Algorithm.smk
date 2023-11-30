@@ -47,11 +47,11 @@ rule GammaDelta:
             os.path.join(DATA_DIR_MG, "{PROJECT}/09_Gamma_Delta_Results/{SAMPLE}/{SAMPLE}"),
             PROJECT = config["metagenomics"]["project"], SAMPLE = config["metagenomics"]["sample"]
             ),
-        gamma = config["metagenomics"]["gamma"],
-        delta = config["metagenomics"]["delta"]
+        GAMMA = config["metagenomics"]["gamma"],
+        DELTA = config["metagenomics"]["delta"]
         
     shell:
         """
-        python3 scripts/gamma-delta.py -g {params.gamma} -d {params.delta} -m {params.OutputFiltered} -r1 {params.PAIRED_1} -r2 {params.PAIRED_2} \
+        python3 scripts/gamma-delta.py -g {params.GAMMA} -d {params.DELTA} -m {params.OutputFiltered} -r1 {params.PAIRED_1} -r2 {params.PAIRED_2} \
         -o {output.summary} -O {params.assignment} -F {params.reads}
         """
