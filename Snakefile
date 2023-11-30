@@ -12,9 +12,15 @@
 # Based on how well the read maps on different reference species it will classify the read to one specific species. 
 #
 ###################################################################
-#
-############################# PARAMS #############################
+from snakemake.utils import min_version
+
+##### set minimum snakemake version #####
+min_version("7.25.0")
+
+############################# CONFIG #############################
 configfile: "config.yaml"
+
+############################# PARAMS #############################
 # Paths to the directory containing Raw sequencing data, Project folder (All generated metadata)
 DATA_DIR_GS = config["genome_skimming"]["datadir"]
 DATA_DIR_MG = config["metagenomics"]["datadir"]
