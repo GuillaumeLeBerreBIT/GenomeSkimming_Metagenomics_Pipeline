@@ -37,8 +37,8 @@ parser.add_argument("-g",   "--gamma",          type=str,   help="Gamma threshol
 parser.add_argument("-d",   "--delta",          type=str,   help="Delta threshold (per one unit) [1-0]")
 parser.add_argument("-o",   "--output",         type=str,   help="Name of the output file (CSV format)")
 parser.add_argument("-O",   "--outInfo",        type=str,   help="Output the assignment of each read (CSV format)")
-parser.add_argument("-F",   "--FastqOutput",        type=str,   help="Write each read to its respective FASTQ file, Forward (R1) and Reversed (R2) if SE only to R. \
-                                                                    Only provide the prefix of the filename.")
+parser.add_argument("-F",   "--FastOutput",        type=str,   help="Write each read to its respective FASTQ/FASTA file(s), Forward (R1) and Reversed (R2) if SE only to R. \
+                                                                    Only provide the prefix of the filename, without the extension.")
 args = parser.parse_args()
 
 ## ABREVIATIONS
@@ -223,8 +223,8 @@ def summary_dict(ReadDict):
 def write_reads_file(AssignedReads):
     
     # Want to rewrite all the reads from R1 or R2 to a new file
-    # Reread FASTQ IF read in dictionary -- > Write read to new file
-    if args.FastqOutput is not None:
+    # Reread FASTQ/A IF read in dictionary -- > Write read to new file
+    if args.FastOutput is not None:
         # Check whether PE files were given
         if args.R1 is not None and \
         args.R2 is not None: 
