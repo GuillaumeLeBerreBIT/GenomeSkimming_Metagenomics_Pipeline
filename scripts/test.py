@@ -10,8 +10,7 @@
 #    for feat in gb_record.features:
 #        if feat.type == "gene" \
 #            and 'cox1' in feat.qualifiers["gene"]:
-#                print(feat.qualifiers["sequence"], feat.qualifiers["gene"])
-#     
+#                print(feat.qualifiers["sequence"], feat.qualifiers["gene"])     
 
 
 var = ["file", ".fastq"]
