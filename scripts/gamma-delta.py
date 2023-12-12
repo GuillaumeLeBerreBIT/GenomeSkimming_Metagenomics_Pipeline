@@ -232,8 +232,8 @@ def write_reads_file(AssignedReads):
             r1_ext = os.path.splitext(args.R1)
             r2_ext = os.path.splitext(args.R2)
             # Open the FASTQ files to write the reads to >> Format on inputted suffix and input extension files
-            with open(f"{args.FastqOutput}_R1_Paired{r1_ext[1]}", "w") as file_r1, \
-                 open(f"{args.FastqOutput}_R2_Paired{r2_ext[1]}", "w") as file_r2:
+            with open(f"{args.FastOutput}_R1_Paired{r1_ext[1]}", "w") as file_r1, \
+                 open(f"{args.FastOutput}_R2_Paired{r2_ext[1]}", "w") as file_r2:
                      
                 # Iterate over the records of the input FASTQ file >> Extension based on the input files
                 for record in SeqIO.parse(args.R1, r1_ext[1][1:]):

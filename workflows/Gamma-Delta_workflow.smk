@@ -26,11 +26,12 @@ rule Analysis:
                 os.path.join(DATA_DIR_MG, "{PROJECT}/02_FastQC_Results/{SAMPLE}_R1_Unpaired_fastqc.html"),
                 os.path.join(DATA_DIR_MG, "{PROJECT}/02_FastQC_Results/{SAMPLE}_R2_Paired_fastqc.html"),
                 os.path.join(DATA_DIR_MG, "{PROJECT}/02_FastQC_Results/{SAMPLE}_R2_Unpaired_fastqc.html"),                    
-                os.path.join(DATA_DIR_MG, "{PROJECT}/09_Gamma_Delta_Results/{SAMPLE}/{SAMPLE}_Gamma_Delta_Summary.csv")
-                    
+                os.path.join(DATA_DIR_MG, "{PROJECT}/09_Gamma_Delta_Results/{SAMPLE}/{SAMPLE}_Gamma{GAMMA}_Delta{DELTA}_Summary.csv")                    
                 ],
                 PROJECT = config["metagenomics"]["project"],
-                SAMPLE = config["metagenomics"]["sample"]                
+                SAMPLE = config["metagenomics"]["sample"], 
+                GAMMA = config["metagenomics"]["gamma"], 
+                DELTA = config["metagenomics"]["delta"]                
             )
     output:
         touch('Gamma-Delta_Analysis.done')

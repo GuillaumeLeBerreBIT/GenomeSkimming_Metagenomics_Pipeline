@@ -19,8 +19,11 @@ rule GammaDelta:
             )
     output:
         summary = expand(
-            os.path.join(DATA_DIR_MG, "{PROJECT}/09_Gamma_Delta_Results/{SAMPLE}/{SAMPLE}_Gamma_Delta_Summary.csv"),
-            PROJECT = config["metagenomics"]["project"], SAMPLE = config["metagenomics"]["sample"]
+            os.path.join(DATA_DIR_MG, "{PROJECT}/09_Gamma_Delta_Results/{SAMPLE}/{SAMPLE}_Gamma{GAMMA}_Delta{DELTA}_Summary.csv"),
+            PROJECT = config["metagenomics"]["project"], 
+            SAMPLE = config["metagenomics"]["sample"], 
+            GAMMA = config["metagenomics"]["gamma"], 
+            DELTA = config["metagenomics"]["delta"]
             )
 
     conda:
@@ -53,5 +56,5 @@ rule GammaDelta:
     shell:
         """
         python3 scripts/gamma-delta.py -g {params.GAMMA} -d {params.DELTA} -m {params.OutputFiltered} -r1 {params.PAIRED_1} -r2 {params.PAIRED_2} \
-        -o {output.summary} -O {params.assignment} -F {params.reads}
+        -o {output.summary} -O {params.assignment} -F {params.reads}_G{params.GAMMA}_D{params.DELTA}
         """

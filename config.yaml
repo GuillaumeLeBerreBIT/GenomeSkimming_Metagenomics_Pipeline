@@ -8,7 +8,7 @@
 # ZAND: 
 # snakemake --use-conda --use-singularity --singularity-args "-B /home/genomics/gleberre/01_Research_BAR_ZAND/02_ZAND/01_ZAND_GS:/home/genomics/gleberre/01_Research_BAR_ZAND/03_Pipeline_development/mnt" --cores 24
 
-pipeline: "Genome_Skimming" 
+pipeline: "Metagenomics" 
 # Genome_Skimming
 # Metagenomics
 
@@ -96,7 +96,7 @@ genbank:
 ## METAGENOMICS
 metagenomics:
   
-  sample: 'BAR_MG_Field_3_S28'
+  sample: 'BAR_MG_C_harengus_S25'
 
   suffix_r1: '_R1_001.fastq.gz'
   suffix_r2: '_R2_001.fastq.gz'
@@ -116,7 +116,7 @@ metagenomics:
   KrakenCont: "/home/genomics/gleberre/01_Research_BAR_ZAND/03_Pipeline_development/databases/K2_Standard_DB/"
   # Location to the KRAKEN Standard database for contamination filtering
 
-  workflow: "Gamma_Delta_Kmer"
+  workflow: "Gamma_Delta"
   # Kmer_Matching: To perform k-mer matching of the reads against a "Custom" created database
   # Gamma_Delta: Perform the mapping of reads against reference mitochondrial organelle and ribosomal repeats
   # Gamma_Delta_Kmer: Will do both the mapping as well as the matching of the reads
@@ -128,7 +128,7 @@ metagenomics:
   # BAR: "/home/genomics/gleberre/01_Research_BAR_ZAND/01_BAR/01_BAR_GS/17_Reference_Mapping_MG" 
   # ZAND: "/home/genomics/gleberre/01_Research_BAR_ZAND/02_ZAND/01_ZAND_GS/17_Reference_Mapping_MG"
 
-  # The parameter Gamma is to determine how well it maps to a specie
-  gamma: "0.99"
+  # The parameter Gamma is to determine how well it maps to a species
+  gamma: "0.97"
   # The parameter Delta to determine how well it maps to all other species 
-  delta: "0.98"
+  delta: "0.96"
